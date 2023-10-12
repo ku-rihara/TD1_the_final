@@ -152,6 +152,15 @@ float easeOutSine(Easing x, float start, float end) {
 	return (1 - x.result) * start + x.result * end;
 }
 
+float easeInBack(Easing x, float start, float end) {
+	float c1 = 1.70158f;
+	float c3 = c1 + 1;
+
+	x.result = c3 * x.time * x.time * x.time - c1 * x.time * x.time;
+
+	return (1 - x.result) * start + x.result * end;
+}
+
 float easeOutBack(Easing x, float start, float end) {
 
 	float c1 = 1.70158f;
@@ -163,6 +172,7 @@ float easeOutBack(Easing x, float start, float end) {
 	return (1 - x.result) * start + x.result * end;
 
 }
+
 
 Vector2 normalize(Vector2 pos) {
 

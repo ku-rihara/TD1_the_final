@@ -26,3 +26,6 @@ float isBoxCollision(float posX1, float posY1, float posX2, float posY2, float w
 float IsOutOfScreen(float posX, float posYn, int ScreenSizeX, int ScreenSizeY);
 float BoxPointCollision(float BoxLtX, float BoxLtY, float BoxRbX, float BoxRbY, int pointX, int pointY);
 void Shake(float& randomX, float& randomY, bool& isShake, int& time, int rangeX, int rangeY);
+float easeOutBounce(float x);
+void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX);
+void Shake(float& randomX, float& randomY, bool& isShake, int& time, int rangeX, int rangeY);

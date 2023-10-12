@@ -228,3 +228,98 @@ void Shake(float& randomX, float& randomY, bool& isShake, int& timeR, int rangeX
 		randomY = float(rand() % (rangeY * 2) - rangeY);
 	}
 }
+float easeOutBounce(float x) {
+	const float n1 = 7.5625f;
+	const float d1 = 2.75f;
+
+	if (x < 1 / d1) {
+		return n1 * x * x;
+	}
+	else if (x < 2 / d1) {
+		return n1 * (x -= 1.5f / d1) * x + 0.75f;
+	}
+	else if (x < 2.5f / d1) {
+		return n1 * (x -= 2.25f / d1) * x + 0.9375f;
+	}
+	else {
+		return n1 * (x -= 2.625f / d1) * x + 0.984375f;
+	}
+}
+
+void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX) {
+
+	static float t = 0;
+	static float tt = 0;
+	static float x = 0;
+	static float xx = 0;
+	static int time = 0;
+	static int timep = 0;
+	static int timeS = 48;
+	float random = 0;
+	static bool isBack = false;
+	static bool isShake = false;
+
+	if (isSceneChange == true) {
+
+		if (t <= 1) {
+			x += 0.01f;
+		}
+		posY1 = (1.0f - t) * -360 + t * 355;
+		posY2 = (1.0f - t) * 1080 + t * 365;
+	}
+	if (t >= 1) {
+		isSceneChange = false;
+		x = 0;
+		timep = 1;
+	}
+
+	time += timep;
+	if (time > 0 && time < 50) {
+		isShake = true;
+		Shake(randomX, random, isShake, timeS, 20, 10);
+	}
+
+	if (time == 50) {
+		isBack = true;
+	}
+
+	if (isBack == true) {
+		xx += 0.01f;
+		posY1 = (1.0f - tt) * 355 + tt * -400;
+		posY2 = (1.0f - tt) * 365 + tt * 1080;
+	}
+	if (tt >= 1) {
+		t = 0;
+		tt = 0;
+		x = 0;
+		xx = 0;
+		time = 0;
+		timep = 0;
+		timeS = 48;
+		random = 0;
+		isBack = false;
+		isShake = false;
+	}
+
+	t = easeOutBounce(x);
+	tt = easeOutBounce(xx);
+
+}
+
+//void Shake(float& randomX, float& randomY, bool& isShake, int& time, int rangeX, int rangeY) {
+//	if (isShake == false) {
+//		randomX = 0;
+//		randomY = 0;
+//	}
+//	time--;
+//	if (time <= 0) {
+//		isShake = false;
+//		randomX = 0;
+//		randomY = 0;
+//	}
+//	else {
+//		randomX = float(rand() % (rangeX * 2) - rangeX);
+//		randomY = float(rand() % (rangeY * 2) - rangeY);
+//	}
+//}
+//

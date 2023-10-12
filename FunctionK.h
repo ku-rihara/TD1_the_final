@@ -7,12 +7,28 @@ struct Vector2 {
 
 };
 
+struct MapVector2 {
+
+	float x[66];
+	float y[100];
+
+};
+
 struct Vertex {
 
 	Vector2 LeftTop;
 	Vector2 LeftBottom;
 	Vector2 RightTop;
 	Vector2 RightBottom;
+
+};
+
+struct MapVertex {
+
+	MapVector2 LeftTop;
+	MapVector2 LeftBottom;
+	MapVector2 RightTop;
+	MapVector2 RightBottom;
 
 };
 
@@ -35,6 +51,15 @@ struct SHAKE {
 	Vector2 random;
 	int time;
 	bool isShake;
+};
+
+struct SceneChangeP {
+	Vector2 pos1;
+	Vector2 pos2;
+	Vector2 center1;
+	Vector2 center2;
+	Vector2 random;
+	bool isSceneChange;
 };
 
 struct MAINCHARACTER {
@@ -79,6 +104,9 @@ struct ENEMYCHARACTER {
 	float  velocity[10];
 	float accelaration[10];
 	float radius[10];
+	int hitConbo;
+	int conboCollTime;
+
 
 };
 
@@ -99,12 +127,16 @@ struct FLAG {
 	int isDamageColl;
 	int isScaleUp;
 	int isScaleDown;
+	int isHit;
+	int isConboChain;
 };
 
 struct MAPCHIP {
 
 	Vector2 worldPos;
 	Vector2 screenPos;
+	MapVertex pos;
+	MapVertex wide;
 	float scale;
 	int number;
 	float size;
@@ -120,6 +152,12 @@ struct BACKGROUND {
 	Vector2 back2;
 };
 
+enum Scene {
+
+	TITLE,
+	PLAY,
+	RESULT,
+};
 
 void VectorScreenPrintf(int x, int y, Vector2 vector);
 
@@ -152,6 +190,10 @@ float easeInSine(Easing x, float start,float end);
 float easeOutSine(Easing x, float start, float end);
 
 float easeOutBack(Easing x, float start, float end);
+
+
+
+float easeInBack(Easing x, float start, float end);
 
 Vector2 normalize(Vector2 pos);
 

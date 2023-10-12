@@ -2,7 +2,11 @@
 //#include <stdio.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 #include "Functions.h"
+
+
 
 float DotProduct(float AstartX, float AstartY, float AendX, float AendY, float BstartX, float BstartY, float BendX, float BendY) {
 	float VectorAX = AendX - AstartX;
@@ -206,3 +210,21 @@ float BoxPointCollision(float BoxLtX, float BoxLtY, float BoxRbX, float BoxRbY, 
 	return 0;
 }
 
+void Shake(float& randomX, float& randomY, bool& isShake, int& timeR, int rangeX, int rangeY) {
+
+
+	if (isShake == false) {
+		randomX = 0;
+		randomY = 0;
+	}
+	timeR--;
+	if (timeR <= 0) {
+		isShake = false;
+		randomX = 0;
+		randomY = 0;
+	}
+	else {
+		randomX = float(rand() % (rangeX * 2) - rangeX);
+		randomY = float(rand() % (rangeY * 2) - rangeY);
+	}
+}

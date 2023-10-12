@@ -30,6 +30,13 @@ struct Easing {
 	
 };
 
+struct SHAKE {
+
+	Vector2 random;
+	int time;
+	bool isShake;
+};
+
 struct MAINCHARACTER {
  
 	 Vertex vertexPos;
@@ -46,6 +53,7 @@ struct MAINCHARACTER {
 	Vector2 scrollPos;
 	Easing scaleUpEasing;
 	Easing scaleDownEasing;
+    SHAKE  damageShake;
 	float time;
 	float  velocity;
 	float  velocitySave;

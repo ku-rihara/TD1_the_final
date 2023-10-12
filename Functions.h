@@ -1,5 +1,6 @@
 #pragma once
 
+
 float DotProduct(float AstartX, float AstartY, float AendX, float AendY, float BstartX, float BstartY, float BendX, float BendY);
 float CrossProduct(float AstartX, float AstartY, float AendX, float AendY, float BstartX, float BstartY, float BendX, float BendY);
 float MAX(float x, float y);
@@ -24,4 +25,4 @@ float CenterC(float leftTopX, float leftTopY, float width, float height, int n);
 float isBoxCollision(float posX1, float posY1, float posX2, float posY2, float width, float height, float width2, float height2);
 float IsOutOfScreen(float posX, float posYn, int ScreenSizeX, int ScreenSizeY);
 float BoxPointCollision(float BoxLtX, float BoxLtY, float BoxRbX, float BoxRbY, int pointX, int pointY);
-
+void Shake(float& randomX, float& randomY, bool& isShake, int& time, int rangeX, int rangeY);

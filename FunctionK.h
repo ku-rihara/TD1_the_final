@@ -7,12 +7,7 @@ struct Vector2 {
 
 };
 
-struct MapVector2 {
 
-	float x[66];
-	float y[100];
-
-};
 
 struct Vertex {
 
@@ -23,14 +18,6 @@ struct Vertex {
 
 };
 
-struct MapVertex {
-
-	MapVector2 LeftTop;
-	MapVector2 LeftBottom;
-	MapVector2 RightTop;
-	MapVector2 RightBottom;
-
-};
 
 struct inVector2 {
 	int intx;
@@ -88,7 +75,8 @@ struct MAINCHARACTER {
 	float radius;
 	int fallCollTime;
 	int damageCollTime;
-	float scale;
+	float drawScale;
+	float totalScale;
 	float ScaleSave;
 };
 
@@ -129,14 +117,17 @@ struct FLAG {
 	int isScaleDown;
 	int isHit;
 	int isConboChain;
+	int isMapZoomOut;
+	int totalScaleDown;
+	int totalScaleUp;
 };
 
 struct MAPCHIP {
 
+	Vector2 ScrollPos;
 	Vector2 worldPos;
-	Vector2 screenPos;
-	MapVertex pos;
-	MapVertex wide;
+	Vertex pos;
+	Vertex wide;
 	float scale;
 	int number;
 	float size;

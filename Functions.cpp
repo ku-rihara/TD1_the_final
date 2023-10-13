@@ -299,6 +299,7 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX
 		random = 0;
 		isBack = false;
 		isShake = false;
+
 	}
 
 	t = easeOutBounce(x);

@@ -239,6 +239,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	main.velocity = 5;
 
+	float screenCenterX = 1280 / 2; // 画面の中央X座標
+	float screenCenterY = 720 / 2;  // 画面の中央Y座標
+
+	// 2. スクロールベクトルを計算
+	float scrollVectorX = main.worldPos.x - main.scrollPos.x - screenCenterX;
+	float scrollVectorY = main.worldPos.y - main.scrollPos.y - screenCenterY;
+
+
 	///プレイヤーの画面上に映し続ける座標
 	main.kameraPos.x = 600;
 	main.kameraPos.y = 100;
@@ -248,7 +256,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int BackGround;
 	int sceneChangeHandle;
 	int sceneChangeHandle2;
-
+	
+	main.Handle = Novice::LoadTexture("./Resources./Images./player1-3.png");
 	mapchip.Handle = Novice::LoadTexture("white1x1.png");///マップチップの画像
 	frontBackGround = Novice::LoadTexture("./Resources./Images./backGroudTest.png");
 	BackGround = Novice::LoadTexture("./Resources./Images./backGroundTest2.png");
@@ -465,7 +474,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 				///急降下してない状態で当たったら
-				if (distance.enemyANDplayer[i] <= enemy.radius[i] + main.radius && flag.isEnemyDeath[i] == 0 && flag.isFallHighSpeed == 0 && flag.isDamage == 0) {
+				if (distance.enemyANDplayer[i] <= enemy.radius[i] + main.radius && flag.isEnemyDeath[i] == 0 && flag.isFallHighSpeed == 0 ) {
 
 					flag.isDamage = 1;
 				}
@@ -490,6 +499,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (flag.isHit == 1) {
 
 				enemy.hitConbo += 1;
+				main.totalScale += 0.2f;
 
 				flag.isHit = 0;
 			}
@@ -509,7 +519,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///ダメージ受けた時の処理
-			if (flag.isDamage == 1 && flag.isDamageColl == 0) {
+			if (flag.isDamage == 1&& flag.isDamageColl==0) {
 
 				main.ScaleSave = main.drawScale;
 				main.scaleUpEasing.time = 0;
@@ -517,7 +527,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				flag.isScaleDown = 1;
 				flag.isDamageColl = 1;
 				flag.isDamage = 0;
-				flag.totalScaleDown = 1;
+				main.totalScale -= 0.2f;
 			}
 
 			///ダメ―ジ受けた時のクールタイム1秒
@@ -528,6 +538,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (main.damageCollTime >= 60) {
 
 					flag.isDamageColl = 0;
+					main.damageCollTime = 0;
 
 				}
 			}
@@ -535,9 +546,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///プレイヤーが小さくなってしまう処理
 			if (flag.isScaleDown == 1) {
 
-				main.scaleDownEasing.time += 0.04f;
+				main.scaleDownEasing.time += 0.07f;
 
-				main.drawScale = easeOutBack(main.scaleDownEasing, main.ScaleSave, main.ScaleSave - 0.2f);
+				main.drawScale =easeOutSine(main.scaleDownEasing, main.ScaleSave, main.ScaleSave - 0.2f);
 
 				if (main.scaleDownEasing.time >= 1.0f) {
 
@@ -551,12 +562,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 			}
-
-		
+	
 			///プレイヤーが大きくなる処理
 			if (flag.isScaleUp == 1) {
 
-				main.scaleUpEasing.time += 0.04f;
+				main.scaleUpEasing.time += 0.07f;
 
 				main.drawScale = easeOutBack(main.scaleUpEasing, main.ScaleSave, main.ScaleSave + 0.2f);
 
@@ -574,15 +584,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				    }
 			}
 
-
-			if (main.totalScale >= 1.8f && main.totalScale <= 2.8f) {
+			///
+			if (main.totalScale >= 1.8f&&flag.ZoomRock==0) {
 
 				flag.isMapZoomOut = 1;
+				flag.ZoomRock = 1;
+				main.ScaleSave = main.drawScale;
 			}
 
 			if (flag.isMapZoomOut == 1) {
 
-				mapchip.scale = 2;
+				mapchip.zoomOutEasing.time += 0.01f;
+
+				mapchip.scale = easeOutSine(mapchip.zoomOutEasing, 1, 0.7f);
+				main.drawScale = easeOutSine(mapchip.zoomOutEasing, main.drawScale, main.ScaleSave - 0.3f);
+
+
+				if (mapchip.zoomOutEasing.time >= 1.0f) {
+
+					mapchip.zoomOutEasing.time = 1;
+				}
+
+				if (mapchip.zoomOutEasing.time == 1) {
+					flag.isMapZoomOut = 0;
+					
+				}		
 			}
 			///↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓マップチップの当たり判定ここから↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
@@ -744,8 +770,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑↑演出系ここまで↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-
-
+			
 
 			///↓↓↓↓↓↓↓↓↓座標変換↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
@@ -759,13 +784,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.screenPos.y = main.worldPos.y - main.scrollPos.y;
 
 			///マップチップのY軸の座標
-			mapchip.ScrollPos.x = -(main.worldPos.x - main.kameraPos.x);
-			mapchip.ScrollPos.y = -(main.worldPos.y - main.kameraPos.y);
-
-
 			
-			
+			screenCenterX = 0;
+			screenCenterY =0;
 
+			// 2. スクロールベクトルを計算
+			scrollVectorX = (main.worldPos.x) - main.scrollPos.x - screenCenterX;
+			scrollVectorY = main.worldPos.y - main.scrollPos.y - screenCenterY;
+
+			//// 3. ベクトルをズーム倍率に応じて調整
+			scrollVectorX /= mapchip.scale;
+			scrollVectorY /= mapchip.scale;
+
+			// 4. 新しいスクロール位置を計算
+			mapchip.ScrollPos.x = screenCenterX - main.worldPos.x + scrollVectorX;
+			mapchip.ScrollPos.y = screenCenterY - main.worldPos.y + scrollVectorY;
+
+
+		
 			///敵の座標変換
 			for (int i = 0; i < 10; i++) {
 
@@ -833,29 +869,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///プレイヤーの描画
-			newDrawQuad(main.vertexPos.LeftTop, main.vertexPos.RightTop, main.vertexPos.LeftBottom, main.vertexPos.RightBottom, 0, 0, 48, 48, mapchip.Handle, WHITE);
+			newDrawQuad(main.vertexPos.LeftTop, main.vertexPos.RightTop, main.vertexPos.LeftBottom, main.vertexPos.RightBottom, 0, 0, 48, 48, main.Handle, WHITE);
 
 
 			Novice::DrawLine(0, int(main.worldPos.y + mapchip.ScrollPos.y), 1280, int(main.worldPos.y + mapchip.ScrollPos.y), RED);
 
 			Novice::DrawLine(0, int(main.oldworldPos.y + mapchip.ScrollPos.y), 1280, int(main.oldworldPos.y + mapchip.ScrollPos.y), WHITE);
 
-			for (int i = 0; i < 10; i++) {
-
-				if (distance.enemyANDplayer[i] <= 48 && flag.isEnemyDeath[i] == 1) {
-
-					///プレイヤーの描画
-					newDrawQuad(main.vertexPos.LeftTop, main.vertexPos.RightTop, main.vertexPos.LeftBottom, main.vertexPos.RightBottom, 0, 0, 48, 48, mapchip.Handle, RED);
-
-				}
-			}
+			
 
 			newScreenPrintf(0, 0, flag.isScaleUp);
-			newScreenPrintf(0, 20, flag.isScaleDown);
+			newScreenPrintf(0, 20, main.worldPos.x);
 			newScreenPrintf(0, 40, main.scaleDownEasing.time);
 			newScreenPrintf(0, 60, main.totalScale);
 			newScreenPrintf(0, 80, main.ScaleSave);
-			newScreenPrintf(0, 100, mapchip.ScrollPos.y);
+			newScreenPrintf(0, 100, mapchip.scale);
 
 			break;
 

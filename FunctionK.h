@@ -78,6 +78,7 @@ struct MAINCHARACTER {
 	float drawScale;
 	float totalScale;
 	float ScaleSave;
+	int Handle;
 };
 
 struct ENEMYCHARACTER {
@@ -118,8 +119,7 @@ struct FLAG {
 	int isHit;
 	int isConboChain;
 	int isMapZoomOut;
-	int totalScaleDown;
-	int totalScaleUp;
+	int ZoomRock;
 };
 
 struct MAPCHIP {
@@ -128,6 +128,7 @@ struct MAPCHIP {
 	Vector2 worldPos;
 	Vertex pos;
 	Vertex wide;
+	Easing zoomOutEasing;
 	float scale;
 	int number;
 	float size;
@@ -181,8 +182,6 @@ float easeInSine(Easing x, float start,float end);
 float easeOutSine(Easing x, float start, float end);
 
 float easeOutBack(Easing x, float start, float end);
-
-
 
 float easeInBack(Easing x, float start, float end);
 

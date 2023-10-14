@@ -73,48 +73,48 @@ Vector2 RightBottomVertex(Vector2 center, Vector2  RightBottomvertex, float thet
 }
 
 
-Vector2 LeftTopMapNum(Vector2 worldpos, float heigth, float width, float size ) {
+Vector2 LeftTopMapNum(Vector2 worldpos,float scale, float heigth, float width, float size ) {
 
 	Vector2 mapnum;
 
-	mapnum.y = (worldpos.y - (heigth / 2)) / size;
+	mapnum.y = ((worldpos.y*scale) - (heigth / 2)) / size;
 
-	mapnum.x = (worldpos.x - (width / 2)) / size;
+	mapnum.x = ((worldpos.x * scale) - (width / 2)) / size;
 	
 	return mapnum;
 }
 
-Vector2 LeftBottomMapNum(Vector2 worldpos, float heigth, float width, float size) {
+Vector2 LeftBottomMapNum(Vector2 worldpos, float scale, float heigth, float width, float size) {
 
 	Vector2 mapnum;
 
-	mapnum.y = (worldpos.y + (heigth / 2 - 1)) / size;
+	mapnum.y = ((worldpos.y * scale) + (heigth / 2 - 1)) / size;
 
-	mapnum.x = (worldpos.x - (width / 2)) / size;
+	mapnum.x = ((worldpos.x * scale) - (width / 2)) / size;
 
 	return mapnum;
 
 }
 
-Vector2 RightTopMapNum(Vector2 worldpos, float heigth, float width, float size) {
+Vector2 RightTopMapNum(Vector2 worldpos, float scale, float heigth, float width, float size) {
 
 	Vector2 mapnum;
 
-	mapnum.y = (worldpos.y - (heigth / 2)) / size;
+	mapnum.y = ((worldpos.y * scale) - (heigth / 2)) / size;
 
-	mapnum.x = (worldpos.x + (width / 2 - 1)) / size;
+	mapnum.x = ((worldpos.x * scale) + (width / 2 - 1)) / size;
 
 	return mapnum;
 
 }
 
-Vector2 RightBottomMapNum(Vector2 worldpos, float heigth, float width, float size) {
+Vector2 RightBottomMapNum(Vector2 worldpos, float scale, float heigth, float width, float size) {
 
 	Vector2 mapnum;
 
-	mapnum.y = (worldpos.y + (heigth / 2 - 1)) / size;
+	mapnum.y = ((worldpos.y * scale) + (heigth / 2 - 1)) / size;
 
-	mapnum.x = (worldpos.x + (width / 2 - 1)) / size;
+	mapnum.x = ((worldpos.x * scale) + (width / 2 - 1)) / size;
 
 	return mapnum;
 

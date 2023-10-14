@@ -307,20 +307,3 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX
 
 }
 
-//void Shake(float& randomX, float& randomY, bool& isShake, int& time, int rangeX, int rangeY) {
-//	if (isShake == false) {
-//		randomX = 0;
-//		randomY = 0;
-//	}
-//	time--;
-//	if (time <= 0) {
-//		isShake = false;
-//		randomX = 0;
-//		randomY = 0;
-//	}
-//	else {
-//		randomX = float(rand() % (rangeX * 2) - rangeX);
-//		randomY = float(rand() % (rangeY * 2) - rangeY);
-//	}
-//}
-//

@@ -79,6 +79,7 @@ struct MAINCHARACTER {
 	float totalScale;
 	float ScaleSave;
 	int Handle;
+	
 };
 
 struct ENEMYCHARACTER {
@@ -161,13 +162,13 @@ Vector2 RightTopVertex(Vector2 center, Vector2  RightTopvertex, float theta, flo
 
 Vector2 RightBottomVertex(Vector2 center, Vector2  RightBottomvertex, float theta, float scale);
 
-Vector2 LeftTopMapNum(Vector2 worldpos, float heigth, float width, float size);
+Vector2 LeftTopMapNum(Vector2 worldpos, float scale, float heigth, float width, float size);
 
-Vector2 LeftBottomMapNum(Vector2 worldpos, float heigth, float width, float size);
+Vector2 LeftBottomMapNum(Vector2 worldpos, float scale, float heigth, float width, float size);
 
-Vector2 RightTopMapNum(Vector2 worldpos, float heigth, float width, float size);
+Vector2 RightTopMapNum(Vector2 worldpos, float scale, float heigth, float width, float size);
 
-Vector2 RightBottomMapNum(Vector2 worldpos, float heigth, float width, float size);
+Vector2 RightBottomMapNum(Vector2 worldpos, float scale, float heigth, float width, float size);
 
 void newDrawQuad(Vector2 LeftTop, Vector2 RigthTop, Vector2 LeftBottom, Vector2 RigthBottom, float startx, float starty, float DrawWidth, float DrawHeigth, int Handle, int Color);
 

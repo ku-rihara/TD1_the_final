@@ -121,8 +121,8 @@ struct FLAG {
 	int isScaleDown;
 	int isHit;
 	int isConboChain;
-	int isMapZoomOut;
-	int ZoomRock;
+	int isMapZoomInOut;
+	int ZoomLevel;
 };
 
 struct MAPCHIP {

@@ -372,7 +372,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.oldworldPos.x = main.worldPos.x;
 			main.oldworldPos.y = main.worldPos.y;
 
-		
+			///スケールを掛けてく
+			main.height = 48 * main.drawScale;
+			main.width = 48 * main.drawScale;
+			main.radius = 24 * main.drawScale;
+			mapchip.size = 48 * mapchip.scale;
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑頂点の座標計算ここから↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -576,37 +580,63 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				    }
 			}
 
-			///
-			if (main.totalScale >= 1.8f && flag.ZoomRock == 0) {
 
-				flag.isMapZoomOut = 1;
-				flag.ZoomRock = 1;
+			///記録Level0
+			if (main.totalScale < 2.0f&&flag.ZoomLevel==1) {
+
+				flag.isMapZoomInOut = 1;
+				flag.ZoomLevel = 0;
+				main.ScaleSave = main.drawScale;
+				main.saveWorldPos.y = main.worldPos.y;
+				
+			}
+
+			///Level1
+			if (main.totalScale >= 2.0f && flag.ZoomLevel == 0) {
+
+				flag.isMapZoomInOut = 1;
+				flag.ZoomLevel = 1;
 				main.ScaleSave = main.drawScale;
 				main.saveWorldPos.y = main.worldPos.y;
 			}
 				
 
-			if (flag.isMapZoomOut == 1) {
+
+			///実際に行う
+			if (flag.isMapZoomInOut == 1 ) {
 
 				mapchip.zoomOutEasing.time += 0.02f;
 
-				mapchip.scale = easeOutSine(mapchip.zoomOutEasing, 1, 0.7f);
-				main.drawScale = easeOutSine(mapchip.zoomOutEasing, main.ScaleSave, main.ScaleSave - 0.3f);
-				main.worldPos.y= easeOutSine(mapchip.zoomOutEasing, main.saveWorldPos.y, main.saveWorldPos.y-50);
+				if (flag.ZoomLevel == 0) {
 
-				
+					mapchip.scale = easeOutSine(mapchip.zoomOutEasing, 0.7f, 1.0f);
+					main.drawScale = easeOutSine(mapchip.zoomOutEasing, main.ScaleSave, main.ScaleSave +0.3f );
+					main.worldPos.y = easeOutSine(mapchip.zoomOutEasing, main.saveWorldPos.y, main.saveWorldPos.y + 50);
 
+				}
 
+				else if (flag.ZoomLevel == 1) {
+
+					mapchip.scale = easeOutSine(mapchip.zoomOutEasing, 1, 0.7f);
+					main.drawScale = easeOutSine(mapchip.zoomOutEasing, main.ScaleSave, main.ScaleSave - 0.3f);
+					main.worldPos.y = easeOutSine(mapchip.zoomOutEasing, main.saveWorldPos.y, main.saveWorldPos.y - 50);
+
+				}
+			
 				if (mapchip.zoomOutEasing.time >= 1.0f) {
 
 					mapchip.zoomOutEasing.time = 1;
 				}
 
 				if (mapchip.zoomOutEasing.time == 1) {
-					flag.isMapZoomOut = 0;
+					mapchip.zoomOutEasing.time = 0;
+					flag.isMapZoomInOut = 0;
 					
 				}		
 			}
+
+
+
 			///↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓マップチップの当たり判定ここから↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 			main.worldMax.y = MAX(main.worldPos.y, main.oldworldPos.y);

@@ -240,8 +240,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	main.velocity = 5;
 
-	float screenCenterX = 1280 / 2; // 画面の中央X座標
-	float screenCenterY = 720 / 2;  // 画面の中央Y座標
 
 	
 
@@ -360,10 +358,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///敵の頂点の座標計算
 			for (int i = 0; i < 10; i++) {
 
-				enemy.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[i], enemy.vertexWide[i].LeftTop, 0, 1);
-				enemy.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[i], enemy.vertexWide[i].LeftBottom, 0, 1);
-				enemy.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[i], enemy.vertexWide[i].RightTop, 0, 1);
-				enemy.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[i], enemy.vertexWide[i].RightBottom, 0, 1);
+				enemy.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[i], enemy.vertexWide[i].LeftTop, 0, mapchip.scale);
+				enemy.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[i], enemy.vertexWide[i].LeftBottom, 0, mapchip.scale);
+				enemy.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[i], enemy.vertexWide[i].RightTop, 0, mapchip.scale);
+				enemy.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[i], enemy.vertexWide[i].RightBottom, 0, mapchip.scale);
 
 				///敵の移動前の座標
 				enemy.oldWorldPos[i].x = enemy.worldPos[i].x;
@@ -374,11 +372,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.oldworldPos.x = main.worldPos.x;
 			main.oldworldPos.y = main.worldPos.y;
 
-			///スケールを掛けてく
-			main.height = 48 * main.drawScale;
-			main.width = 48 * main.drawScale;
-			main.radius = 24 * main.drawScale;
-			mapchip.size = 48 * mapchip.scale;
+		
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑頂点の座標計算ここから↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -583,19 +577,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///
-			if (main.totalScale >= 1.8f&&flag.ZoomRock==0) {
+			if (main.totalScale >= 1.8f && flag.ZoomRock == 0) {
 
 				flag.isMapZoomOut = 1;
 				flag.ZoomRock = 1;
 				main.ScaleSave = main.drawScale;
+				main.saveWorldPos.y = main.worldPos.y;
 			}
+				
 
 			if (flag.isMapZoomOut == 1) {
 
-				mapchip.zoomOutEasing.time += 0.01f;
+				mapchip.zoomOutEasing.time += 0.02f;
 
 				mapchip.scale = easeOutSine(mapchip.zoomOutEasing, 1, 0.7f);
-				main.drawScale = easeOutSine(mapchip.zoomOutEasing, main.drawScale, main.ScaleSave - 0.3f);
+				main.drawScale = easeOutSine(mapchip.zoomOutEasing, main.ScaleSave, main.ScaleSave - 0.3f);
+				main.worldPos.y= easeOutSine(mapchip.zoomOutEasing, main.saveWorldPos.y, main.saveWorldPos.y-50);
+
+				
 
 
 				if (mapchip.zoomOutEasing.time >= 1.0f) {
@@ -626,8 +625,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.fitOldMapSize.inty = int(main.oldworldPos.y / 24);
 			main.fitOldMapSize.inty = (main.fitOldMapSize.inty * 24);
 
-
-		
 
 			///マップチップの番号の取得
 			main.mapNumber.LeftTop = LeftTopMapNum(main.worldPos,mapchip.scale, main.height, main.width, mapchip.size);
@@ -783,26 +780,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.screenPos.x = main.worldPos.x - main.scrollPos.x;
 			main.screenPos.y = main.worldPos.y - main.scrollPos.y;
 
+			mapchip.ScrollPos.x = main.kameraPos.x - (main.worldPos.x * mapchip.scale);
+			mapchip.ScrollPos.y = main.kameraPos.y - (main.worldPos.y * mapchip.scale);
 
-
-			///マップチップのY軸の座標
-			
-			
-			 screenCenterX = 1280 / 2; // 画面の中央X座標
-			 screenCenterY = 720 / 2;  // 画面の中央Y座標
-			
-
-			// 4. 新しいスクロール位置を計算
-			
-			mapchip.ScrollPos.x = 600 - (main.worldPos.x * mapchip.scale);
-			mapchip.ScrollPos.y = 100 - (main.worldPos.y * mapchip.scale);
 
 		
 			///敵の座標変換
 			for (int i = 0; i < 10; i++) {
 
-				enemy.screenPos[i].x = enemy.worldPos[i].x + mapchip.ScrollPos.x;
-				enemy.screenPos[i].y = enemy.worldPos[i].y + mapchip.ScrollPos.y;
+				enemy.screenPos[i].x = (enemy.worldPos[i].x*mapchip.scale) + mapchip.ScrollPos.x;
+				enemy.screenPos[i].y = (enemy.worldPos[i].y * mapchip.scale) + mapchip.ScrollPos.y;
 
 			}
 

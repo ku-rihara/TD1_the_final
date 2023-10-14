@@ -56,6 +56,7 @@ struct MAINCHARACTER {
 	 Vertex mapNumber;
 	 Vertex oldMapNumber;
 	Vector2 worldPos;
+	Vector2 saveWorldPos;
 	Vector2 oldworldPos;
 	Vector2 worldMax;
 	inVector2 fitMapSize;
@@ -94,6 +95,7 @@ struct ENEMYCHARACTER {
 	float  velocity[10];
 	float accelaration[10];
 	float radius[10];
+	
 	int hitConbo;
 	int conboCollTime;
 

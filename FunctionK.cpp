@@ -140,14 +140,14 @@ void newDrawBox(float x, float y, float width,float heigth,int color) {
 
 float easeInSine(Easing x, float start, float end) {
 
-	x.result = cosf((x.time * float(M_PI))/2);
+	x.result = cosf((x.easingTime * float(M_PI))/2);
 
 	return (1 - x.result) * start + x.result * end;
 }
 
 float easeOutSine(Easing x, float start, float end) {
 
-	x.result =sinf((x.time * float(M_PI))/ 2);
+	x.result =sinf((x.easingTime * float(M_PI))/ 2);
 
 	return (1 - x.result) * start + x.result * end;
 }
@@ -156,7 +156,7 @@ float easeInBack(Easing x, float start, float end) {
 	float c1 = 1.70158f;
 	float c3 = c1 + 1;
 
-	x.result = c3 * x.time * x.time * x.time - c1 * x.time * x.time;
+	x.result = c3 * x.easingTime * x.easingTime * x.easingTime - c1 * x.easingTime * x.easingTime;
 
 	return (1 - x.result) * start + x.result * end;
 }
@@ -166,7 +166,7 @@ float easeOutBack(Easing x, float start, float end) {
 	float c1 = 1.70158f;
 	float c3 = c1 + 1;
 
-	x.result = 1 + c3 *powf(x.time - 1, 3) + c1 *powf(x.time - 1, 2);
+	x.result = 1 + c3 *powf(x.easingTime - 1, 3) + c1 *powf(x.easingTime - 1, 2);
 
 
 	return (1 - x.result) * start + x.result * end;

@@ -7,8 +7,6 @@ struct Vector2 {
 
 };
 
-
-
 struct Vertex {
 
 	Vector2 LeftTop;
@@ -28,8 +26,9 @@ struct inVector2 {
 struct Easing {
 
 	int isEasing;
-	float time;
+	float easingTime;
 	float result;
+	float easingPlus;
 	
 };
 
@@ -64,8 +63,8 @@ struct MAINCHARACTER {
 	Vector2 screenPos;
 	Vector2 kameraPos;
 	Vector2 scrollPos;
-	Easing scaleUpEasing;
-	Easing scaleDownEasing;
+	Easing scaleUp;
+	Easing scaleDown;
     SHAKE  damageShake;
 	float time;
 	float  velocity;
@@ -94,8 +93,7 @@ struct ENEMYCHARACTER {
 	Easing easing[10];
 	float  velocity[10];
 	float accelaration[10];
-	float radius[10];
-	
+	float radius[10];	
 	int hitConbo;
 	int conboCollTime;
 
@@ -109,19 +107,20 @@ struct DISTANCE {
 };
 
 struct FLAG {
-	int isMoveAbove;
-	int isPlayerEnemyColligion;
-	int isEnemyDeath[10];
-	int isFallStop;
-	int isFallHighSpeed;
-	int isFallColl;
-	int isDamage;
-	int isDamageColl;
-	int isScaleUp;
-	int isScaleDown;
-	int isHit;
-	int isConboChain;
-	int isMapZoomInOut;
+	bool isMoveAbove;
+	bool isPlayerEnemyColligion;
+	bool isEnemyDeath[10];
+	bool isFallStop;
+	bool isFallHighSpeed;
+	bool isFallColl;
+	bool isDamage;
+	bool isDamageColl;
+	bool isScaleUp;
+	bool isScaleDown;
+	bool isHit;
+	bool isConboChain;
+	bool isMapZoomInOut;
+	bool isAnticipation;
 	int ZoomLevel;
 };
 
@@ -131,12 +130,12 @@ struct MAPCHIP {
 	Vector2 worldPos;
 	Vertex pos;
 	Vertex wide;
-	Easing zoomOutEasing;
+	Easing zoomInOut;
 	float scale;
+	float saveScale;
 	int number;
 	float size;
 	int Handle;
-
 };
 
 struct BACKGROUND {

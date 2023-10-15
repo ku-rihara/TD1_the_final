@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -186,6 +186,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 Linedistance{};
 	Easing Anticipation{};
 
+
 	SceneChangeP sc{
 		{0,0},
 		{0,0},
@@ -218,7 +219,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		enemy.radius[i] = 24;
 
 		enemy.worldPos[i].x = 1300;
-		enemy.worldPos[i].y = 900 + float(i) * 120;
+		enemy.worldPos[i].y = 900 + float(i) * 200;
 
 		///エネミーのそれぞれ頂点の中心からの幅
 		enemy.vertexWide[i].LeftTop = { 48,48 };
@@ -239,10 +240,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	mapchip.size = 48;
 
-	main.velocity = 5;
-
-
-	
+	main.velocity.y = 5;
 
 
 	///プレイヤーの画面上に映し続ける座標
@@ -256,7 +254,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int sceneChangeHandle2;
 	
 	main.Handle = Novice::LoadTexture("./Resources./Images./player1-3.png");
-	mapchip.Handle = Novice::LoadTexture("white1x1.png");///マップチップの画像
+	mapchip.Handle = Novice::LoadTexture("./Resources./Images./block.png");///マップチップの画像
 	frontBackGround = Novice::LoadTexture("./Resources./Images./backGroudTest.png");
 	BackGround = Novice::LoadTexture("./Resources./Images./backGroundTest2.png");
 	sceneChangeHandle=Novice::LoadTexture("./Resources./Images./SceneChange1.png");
@@ -304,12 +302,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///↓↓↓↓↓↓↓↓ゲームプレイ中の処理ここから↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 			///前背景の移動
-			background.flont1.y -= main.velocity * 0.1f;
-			background.flont2.y -= main.velocity * 0.1f;
+			background.flont1.y -= main.velocity.y * 0.1f;
+			background.flont2.y -= main.velocity.y * 0.1f;
 
 			///後ろ背景の移動
-			background.back1.y -= main.velocity * 0.05f;
-			background.back2.y -= main.velocity * 0.05f;
+			background.back1.y -= main.velocity.y * 0.05f;
+			background.back2.y -= main.velocity.y * 0.05f;
 
 
 			///前背景の無限スクロール
@@ -381,25 +379,66 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑頂点の座標計算ここから↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
+
 			///プレイヤーのX軸の動き
-			PlayerMove(main);
+		
+			if (flag.isLeftDamage == 0&&flag.isRightDamage==0){
+
+				if (keys[DIK_A] || keys[DIK_LEFT]) {
+					main.worldPos.x += -6;
+				}
+
+				if (keys[DIK_D] || keys[DIK_RIGHT]) {
+					main.worldPos.x += 6;
+				}		
+			}
+
+			if (flag.isLeftDamage == 1) {
+
+			
+
+				main.sideDamageTime += 1;
+				main.worldPos.x += 2;
+
+				if (main.sideDamageTime >= 60) {
+
+					flag.isLeftDamage = 0;
+					main.sideDamageTime = 0;
+
+				}
+			}
+
+			if (flag.isRightDamage == 1) {
+
+			
+				main.sideDamageTime += 1;
+				main.worldPos.x -= 2;
+
+				if (main.sideDamageTime >= 60) {
+
+					flag.isRightDamage = 0;
+					main.sideDamageTime = 0;
+
+				}
+			}
 
 			///プレイヤーのY軸の動き
 
-			if (flag.isFallStop == 0) {
+			if (flag.isFallStop == 0&& flag.isHitBack == 0) {
 
-				main.acceleration = 0.01f;
+				main.acceleration.y = 0.01f;
 			}
 
+
 			///加速度足していき
-			main.velocity += main.acceleration;
+			main.velocity.y += main.acceleration.y;
 
 			///座標に速度を足していく
-			main.worldPos.y += main.velocity;
+			main.worldPos.y += main.velocity.y;
 
 
 			///急降下していい状態の時
-			if (flag.isFallColl == 0) {
+			if (flag.isFallColl == 0&& flag.isHitBack == 0) {
 
 				if (keys[DIK_SPACE] && flag.isAnticipation==0&& flag.isFallHighSpeed == 0) {
 
@@ -408,6 +447,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					main.saveWorldPos.y = main.worldPos.y;
 					mapchip.saveScale = mapchip.scale;
 					Anticipation.easingPlus = 0.1f;
+					
 				
 					flag.isAnticipation = 1;///高速降下予備動作発動
 				}
@@ -418,21 +458,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					Anticipation.easingTime += Anticipation.easingPlus;
 		
-
 					main.worldPos.y = easeOutSine(Anticipation, main.saveWorldPos.y, main.saveWorldPos.y-50);
 
 
 					if (Anticipation.easingTime >= 1.0f) {
 
 						Anticipation.easingPlus = -Anticipation.easingPlus;
+					
 					}
-
 
 					if (Anticipation.easingTime < 0) {
 
 						Anticipation.easingTime = 0;
 						flag.isAnticipation = 0;
-						flag.isFallHighSpeed = 1;            
+						flag.isFallHighSpeed = 1;          		
 					}
 
 					///早期キャンセル
@@ -442,17 +481,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						flag.isFallHighSpeed = 0;
 						flag.isAnticipation = 0;
 						Anticipation.easingTime = 0;
-						main.worldPos.y = main.saveWorldPos.y-30;
+						main.worldPos.y = main.saveWorldPos.y-10;
 					}
 				}
 
 				///急降下する
 				if (flag.isFallHighSpeed == 1&& flag.isAnticipation == 0) {
 
-					main.velocity = 28;
+					main.velocity.y = 28;
+
 
 					///急降下をやめる時は保存した速度になう速度を代入
-					if (keys[DIK_SPACE] == 0 && preKeys[DIK_SPACE]) {
+					if (keys[DIK_SPACE] == 0 ) {
 
 						main.velocity = main.velocitySave;
 						flag.isFallHighSpeed = 0;
@@ -503,7 +543,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			f.x = (1.0f - main.time) * main.oldworldPos.x + main.time * main.worldPos.x;
 			f.y = (1.0f - main.time) * main.oldworldPos.y + main.time * main.worldPos.y;
 
-			///↑↑↑↑↑↑↑↑↑↑↑トンネリングを防ぐ処理（カプセル作成）↑↑↑↑↑↑↑↑↑↑↑↑↑
+			///↑↑↑↑↑↑↑↑↑↑↑トンネリングを防ぐ処理（カプセル作成）↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
 
 			for (int i = 0; i < 10; i++) {
 
@@ -562,14 +603,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (flag.isDamage == 1&& flag.isDamageColl==0) {
 
 				main.ScaleSave = main.drawScale;
+				mapchip.saveScale=mapchip.scale;
 				main.scaleUp.easingTime = 0;
 				main.scaleDown.easingTime = 0;
 				flag.isScaleDown = 1;
 				flag.isDamageColl = 1;
+				flag.isHitBack = 1;
 				flag.isDamage = 0;
 				main.totalScale -= 0.2f;
+				main.velocity.y = -23;
+				flag.isHitBack = 1;
 			}
 
+			if (flag.isHitBack == 1) {
+
+			
+				main.acceleration.y = 1.0f;///加速度いったん無くす
+
+				main.hitBackTime += 1;
+
+				if (main.hitBackTime >= 30) {
+
+					main.velocity.y = 3;
+					main.acceleration.y = 0.01f;
+					flag.isHitBack = 0;
+					main.hitBackTime = 0;
+				}
+
+			}
 
 			///ダメ―ジ受けた時のクールタイム1秒
 			if (flag.isDamageColl == 1) {
@@ -624,7 +685,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				    }
 			}
 
-
 			///記録Level0
 			if (main.totalScale < 2.0f&&flag.ZoomLevel==1) {
 
@@ -673,7 +733,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (mapchip.zoomInOut.easingTime == 1) {
 					mapchip.zoomInOut.easingTime = 0;
 					flag.isMapZoomInOut = 0;
-					
 				}		
 			}
 
@@ -721,13 +780,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					///ｙ軸に当たった時の斜め反応
 					main.worldPos.y = float(main.fitMapSize.inty);
-					main.velocity = 3;///速度落とす
-					main.acceleration = 0;///加速度いったん無くす
+					
 					flag.isFallStop = 1;///急降下いったん止める
 					flag.isFallColl = 1;
 					flag.isDamage = 1;///ダメージを受ける
-					main.damageShake.isShake = 1;///シェイクを開始する
-					main.damageShake.time = 30;///シェイクの時間を決める
+					main.damage.isShake = 1;///シェイクを開始する
+					main.damage.shakeTime = 30;///シェイクの時間を決める
 
 
 					///マップの破壊（どしゃん）
@@ -747,9 +805,35 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				else if (map[mapchip.number][int(main.mapNumber.RightTop.y)][int(main.oldMapNumber.RightTop.x)] != 1 && map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.oldMapNumber.RightBottom.x)] != 1 &&
 					map[mapchip.number][int(main.mapNumber.LeftTop.y)][int(main.oldMapNumber.LeftTop.x)] != 1 && map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.oldMapNumber.LeftBottom.x)] != 1) {
+					
 
 					///ｘ軸に当たった時の斜め反応
 					main.worldPos.x = float(main.fitOldMapSize.intx);
+
+
+					///マップの破壊（どしゃん）
+					if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
+
+						map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] = 3;
+
+						flag.isLeftDamage = 1;
+						flag.isDamage = 1;///ダメージを受ける
+						main.damage.isShake = 1;///シェイクを開始する
+						main.damage.shakeTime = 30;///シェイクの時間を決める
+
+					}
+
+					///マップの破壊（どしゃん）
+					if (map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.mapNumber.RightBottom.x)] == 1) {
+
+						map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.mapNumber.RightBottom.x)] = 3;
+
+						flag.isRightDamage = 1;
+						flag.isDamage = 1;///ダメージを受ける
+						main.damage.isShake = 1;///シェイクを開始する
+						main.damage.shakeTime = 30;///シェイクの時間を決める
+
+					}					
 				}
 
 				else {
@@ -758,13 +842,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					main.worldPos.x = float(main.fitOldMapSize.intx);
 					main.worldPos.y = float(main.fitMapSize.inty);
-					main.velocity = 3;///速度落とす
-					main.acceleration = 0;///加速度いったん無くす
+					
 					flag.isFallStop = 1;///急降下いったん止める
 					flag.isDamage = 1;///ダメージを受ける
 					flag.isFallColl = 1;
-					main.damageShake.isShake = 1;///シェイクを開始する
-					main.damageShake.time = 30;///シェイクの時間を決める
+					main.damage.isShake = 1;///シェイクを開始する
+					main.damage.shakeTime = 30;///シェイクの時間を決める
 
 
 					///マップの破壊（どしゃん）
@@ -798,7 +881,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (map[mapchip.number][y][x] == 1 && flag.isMoveAbove == 0) {
 
 							flag.isMoveAbove = 1;
-
 						}
 
 						if (flag.isMoveAbove == 1) {
@@ -811,10 +893,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (map[mapchip.number][y][x] == 1) {
 
 							main.worldPos.y = float(main.fitOldMapSize.inty);
-							main.velocity = 3;
-							main.acceleration = 0;
-
-
+							
 
 							map[mapchip.number][y][x] = 3;
 
@@ -831,7 +910,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			///↓↓↓↓↓↓↓↓↓↓↓↓↓演出系ここから↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-			Shake(main.damageShake.random.x, main.damageShake.random.y, main.damageShake.isShake, main.damageShake.time, 25, 25);
+			Shake(main.damage.random.x, main.damage.random.y, main.damage.isShake, main.damage.shakeTime, 25, 25);
 
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑↑演出系ここまで↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -851,7 +930,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			mapchip.ScrollPos.x = main.kameraPos.x - (main.worldPos.x * mapchip.scale);
 			mapchip.ScrollPos.y = main.kameraPos.y - (main.worldPos.y * mapchip.scale);
-
 
 		
 			///敵の座標変換
@@ -889,10 +967,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case PLAY:
 
 			///背景の描画
-			Novice::DrawSprite(int(0 + main.damageShake.random.x), int(background.back1.y + main.damageShake.random.y), BackGround, 1, 1, 0, WHITE);
-			Novice::DrawSprite(int(0 + main.damageShake.random.x), int(background.back2.y + main.damageShake.random.y), BackGround, 1, 1, 0, WHITE);
-			Novice::DrawSprite(0, int(background.flont1.y + main.damageShake.random.y), frontBackGround, 1, 1, 0, WHITE);
-			Novice::DrawSprite(0, int(background.flont2.y + main.damageShake.random.y), frontBackGround, 1, 1, 0, WHITE);
+			Novice::DrawSprite(int(0 + main.damage.random.x), int(background.back1.y + main.damage.random.y), BackGround, 1, 1, 0, WHITE);
+			Novice::DrawSprite(int(0 + main.damage.random.x), int(background.back2.y + main.damage.random.y), BackGround, 1, 1, 0, WHITE);
+			Novice::DrawSprite(0, int(background.flont1.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
+			Novice::DrawSprite(0, int(background.flont2.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
 
 
 			///マップチップの描画
@@ -904,7 +982,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 						if (map[mapchip.number][i][j] == 1) {
 
-							Novice::DrawQuad(int((mapchip.ScrollPos.x+(j * mapchip.size  + main.damageShake.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + main.damageShake.random.y))), int((mapchip.ScrollPos.x+(j * mapchip.size  + mapchip.size + main.damageShake.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + main.damageShake.random.y))), int((mapchip.ScrollPos.x+(j * mapchip.size + main.damageShake.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + mapchip.size + main.damageShake.random.y))), int((mapchip.ScrollPos.x+(j * mapchip.size  + mapchip.size + main.damageShake.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + mapchip.size + main.damageShake.random.y))), 0, 0, 24, 24, mapchip.Handle, WHITE);
+							Novice::DrawQuad(int((mapchip.ScrollPos.x+(j * mapchip.size  + main.damage.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + main.damage.random.y))), int((mapchip.ScrollPos.x+(j * mapchip.size  + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + main.damage.random.y))), int((mapchip.ScrollPos.x+(j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x+(j * mapchip.size  + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y+(i * mapchip.size  + mapchip.size + main.damage.random.y))), 0, 0, 48,48, mapchip.Handle, WHITE);
 
 						}
 					}
@@ -916,7 +994,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				if (flag.isEnemyDeath[i] == 0) {
 
-					newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, mapchip.Handle, WHITE);
+					newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, main.Handle, WHITE);
 				}
 			}
 
@@ -930,8 +1008,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			
 
-			newScreenPrintf(0, 0, flag.isScaleUp);
-			newScreenPrintf(0, 20, main.worldPos.x);
+			newScreenPrintf(0, 0, flag.isLeftDamage);
+			newScreenPrintf(0, 20, main.velocitySave.y);
 			newScreenPrintf(0, 40, main.scaleDown.easingTime);
 			newScreenPrintf(0, 60, main.totalScale);
 			newScreenPrintf(0, 80, main.oldMapNumber.LeftTop.x);

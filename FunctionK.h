@@ -35,7 +35,7 @@ struct Easing {
 struct SHAKE {
 
 	Vector2 random;
-	int time;
+	int shakeTime;
 	bool isShake;
 };
 
@@ -63,21 +63,23 @@ struct MAINCHARACTER {
 	Vector2 screenPos;
 	Vector2 kameraPos;
 	Vector2 scrollPos;
+	Vector2  velocity;
+	Vector2  velocitySave;
+	Vector2 acceleration;
 	Easing scaleUp;
 	Easing scaleDown;
-    SHAKE  damageShake;
+    SHAKE  damage;
 	float time;
-	float  velocity;
-	float  velocitySave;
-	float acceleration;
+	float sideDamageTime;
 	float width;
 	float height;
 	float radius;
-	int fallCollTime;
-	int damageCollTime;
 	float drawScale;
 	float totalScale;
 	float ScaleSave;
+	int fallCollTime;
+	int damageCollTime;
+	int hitBackTime;
 	int Handle;
 	
 };
@@ -96,7 +98,6 @@ struct ENEMYCHARACTER {
 	float radius[10];	
 	int hitConbo;
 	int conboCollTime;
-
 
 };
 
@@ -121,6 +122,9 @@ struct FLAG {
 	bool isConboChain;
 	bool isMapZoomInOut;
 	bool isAnticipation;
+	bool isLeftDamage;
+	bool isRightDamage;
+	bool isHitBack;
 	int ZoomLevel;
 };
 

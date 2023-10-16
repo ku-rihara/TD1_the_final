@@ -50,7 +50,7 @@
     <ClCompile Include="Functions.cpp">
       <Filter>FunktionS</Filter>
     </ClCompile>
-    <ClCompile Include="Move.cpp">
+    <ClCompile Include="Particle.cpp">
       <Filter>FunktionS</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,7 +132,7 @@
     <ClInclude Include="Functions.h">
       <Filter>FunktionS</Filter>
     </ClInclude>
-    <ClInclude Include="Move.h">
+    <ClInclude Include="Particle.h">
       <Filter>FunktionS</Filter>
     </ClInclude>
   </ItemGroup>

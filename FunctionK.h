@@ -66,9 +66,13 @@ struct MAINCHARACTER {
 	Vector2  velocity;
 	Vector2  velocitySave;
 	Vector2 acceleration;
+	Vector2 afterimageWorldPos[3];
+	Vector2 afterimageScreenPos[3];
+	Vertex afterimagePos[3];
 	Easing scaleUp;
 	Easing scaleDown;
     SHAKE  damage;
+	float rotate;
 	float time;
 	float sideDamageTime;
 	float width;

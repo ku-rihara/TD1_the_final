@@ -18,8 +18,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	///シェイクスピア
 	srand(unsigned int(time(nullptr)));
 
+	const int mapx = 66;
+	const int mapy = 100;
+
 	//マップ40x26
-	int map[3][100][66]{
+	int map[3][mapy][mapx]{
 
 		{
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -169,6 +172,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	};
 
 	int Scene = 0;
+
 
 	MAINCHARACTER main{};///プレイヤーの初期化
 	ENEMYCHARACTER enemy{};///敵の初期化
@@ -330,9 +334,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				}
 				///壊れたマップの復元
-				for (int i = 0; i < 100; i++) {
+				for (int i = 0; i < mapy; i++) {
 
-					for (int j = 0; j < 66; j++) {
+					for (int j = 0; j < mapx; j++) {
 
 						if (map[mapchip.number][i][j] == 3) {
 
@@ -512,15 +516,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			for (int i = 0; i < 3; i++) {
 
-				afterimage.easingTime = 0.15f;
+				afterimage.easingTime = 0.25f;
 
-				main.afterimageWorldPos[0].x = easeOutBack(afterimage, main.afterimageWorldPos[0].x, main.worldPos.x);
-				main.afterimageWorldPos[0].y = easeOutBack(afterimage, main.afterimageWorldPos[0].y, main.worldPos.y);
+				main.afterimageWorldPos[0].x = easeOutSine(afterimage, main.afterimageWorldPos[0].x, main.worldPos.x);
+				main.afterimageWorldPos[0].y = easeOutSine(afterimage, main.afterimageWorldPos[0].y, main.worldPos.y-10);
 
 				if (i >= 1) {
 					
-					main.afterimageWorldPos[i].x = easeOutBack(afterimage, main.afterimageWorldPos[i].x, main.afterimageWorldPos[i-1].x);
-					main.afterimageWorldPos[i].y = easeOutBack(afterimage, main.afterimageWorldPos[i].y, main.afterimageWorldPos[i-1].y-10);
+					main.afterimageWorldPos[i].x = easeOutSine(afterimage, main.afterimageWorldPos[i].x, main.afterimageWorldPos[i-1].x);
+					main.afterimageWorldPos[i].y = easeOutSine(afterimage, main.afterimageWorldPos[i].y, main.afterimageWorldPos[i-1].y-1);
 
 				}
 			}
@@ -1029,9 +1033,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			///マップチップの描画
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < mapy; i++) {
 
-				for (int j = 0; j < 66; j++) {
+				for (int j = 0; j < mapx; j++) {
 
 					if ((j * mapchip.size + mapchip.ScrollPos.x) >= -mapchip.size && (j * mapchip.size + mapchip.ScrollPos.x) <= 1280 + mapchip.size && (i * mapchip.size + mapchip.ScrollPos.y) >= -mapchip.size && (i * mapchip.size + mapchip.ScrollPos.y) <= 720 + mapchip.size) {
 
@@ -1056,7 +1060,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///残像の描画
 			for (int i = 0; i < 3; i++) {
 
-				Novice::DrawEllipse(int(main.afterimageScreenPos[i].x), int(main.afterimageScreenPos[i].y), int(24*main.drawScale), int(24 * main.drawScale), 0, RED, kFillModeSolid);
+				Novice::DrawEllipse(int(main.afterimageScreenPos[i].x), int(main.afterimageScreenPos[i].y), int(24*main.drawScale), int(24 * main.drawScale), 0, 0xff000011, kFillModeSolid);
 			}
 
 			///プレイヤーの描画

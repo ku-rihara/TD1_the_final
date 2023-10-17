@@ -1,5 +1,8 @@
 #pragma once
 
+const int mapx = 66;
+const int mapy = 100;
+
 struct Vector2 {
 
 	float x;
@@ -102,12 +105,29 @@ struct ENEMYCHARACTER {
 	float radius[10];	
 	int hitConbo;
 	int conboCollTime;
+};
 
+
+struct ITEM {
+
+	Vertex vertexPos[10];
+	Vertex vertexWide[10];
+	Vector2 worldPos[10];
+	Vector2 screenPos[10];
+	Vector2 oldWorldPos[10];
+	Vector2 distance[10];
+	Easing easing[10];
+	float  velocity[10];
+	float accelaration[10];
+	float radius[10];
+	int Handle;
+	
 };
 
 struct DISTANCE {
 
 	float enemyANDplayer[10];
+	float itemANDplayer[10];
 
 };
 
@@ -129,6 +149,7 @@ struct FLAG {
 	bool isLeftDamage;
 	bool isRightDamage;
 	bool isHitBack;
+	bool isItemGet;
 	int ZoomLevel;
 };
 
@@ -194,6 +215,12 @@ float easeOutSine(Easing x, float start, float end);
 float easeOutBack(Easing x, float start, float end);
 
 float easeInBack(Easing x, float start, float end);
+
+float easeOutCirc(Easing x, float start, float end);
+
+float easeInQuart(Easing x, float start, float end);
+
+float easeInOutBack(Easing x, float start, float end);
 
 Vector2 normalize(Vector2 pos);
 

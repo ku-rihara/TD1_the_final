@@ -173,6 +173,42 @@ float easeOutBack(Easing x, float start, float end) {
 
 }
 
+float easeOutCirc(Easing x, float start, float end) {
+
+
+	x.result = sqrtf(1 - powf(x.easingTime - 1, 2));
+
+	return (1 - x.result) * start + x.result * end;
+}
+
+float easeInQuart(Easing x, float start, float end) {
+
+	x.result = x.easingTime * x.easingTime * x.easingTime * x.easingTime;
+
+	return (1 - x.result) * start + x.result * end;
+
+}
+
+float easeInOutBack(Easing x, float start, float end) {
+
+	const float c1 = 1.70158f;
+	const float c2 = c1 * 1.525f;
+
+	if (x.easingTime < 0.5f) {
+
+		x.result = (powf(2 * x.easingTime, 2) * ((c2 + 1) * 2 * x.easingTime - c2)) / 2;
+
+	}
+	else {
+
+		x.result = (powf(2 * x.easingTime - 2, 2) * ((c2 + 1) * (x.easingTime * 2 - 2) + c2) + 2) / 2;
+	}
+
+	return (1 - x.result) * start + x.result * end;
+	
+}
+
+
 
 Vector2 normalize(Vector2 pos) {
 

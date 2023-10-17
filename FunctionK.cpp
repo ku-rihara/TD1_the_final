@@ -140,7 +140,7 @@ void newDrawBox(float x, float y, float width,float heigth,int color) {
 
 float easeInSine(Easing x, float start, float end) {
 
-	x.result = cosf((x.easingTime * float(M_PI))/2);
+	x.result = 1-cosf((x.easingTime * float(M_PI))/2);
 
 	return (1 - x.result) * start + x.result * end;
 }
@@ -207,7 +207,6 @@ float easeInOutBack(Easing x, float start, float end) {
 	return (1 - x.result) * start + x.result * end;
 	
 }
-
 
 
 Vector2 normalize(Vector2 pos) {

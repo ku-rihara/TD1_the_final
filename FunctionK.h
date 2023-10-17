@@ -2,6 +2,9 @@
 
 const int mapx = 66;
 const int mapy = 100;
+const int barriaItem = 1;
+const int speedbeam = 2;
+const int enemynum = 10;
 
 struct Vector2 {
 
@@ -93,20 +96,18 @@ struct MAINCHARACTER {
 
 struct ENEMYCHARACTER {
 	
-	Vertex vertexPos[10];
-	Vertex vertexWide[10];
-	Vector2 worldPos[10];
-	Vector2 screenPos[10];
-	Vector2 oldWorldPos[10];
-	Vector2 distance[10];
-	Easing easing[10];
-	float  velocity[10];
-	float accelaration[10];
-	float radius[10];	
+	Vertex vertexPos[enemynum];
+	Vertex vertexWide[enemynum];
+	Vector2 worldPos[enemynum];
+	Vector2 screenPos[enemynum];
+	Vector2 distance[enemynum];
+	Easing easing;
+	float scale[enemynum];
+	float radius[enemynum];
 	int hitConbo;
 	int conboCollTime;
+	int Handle;
 };
-
 
 struct ITEM {
 
@@ -114,27 +115,41 @@ struct ITEM {
 	Vertex vertexWide[10];
 	Vector2 worldPos[10];
 	Vector2 screenPos[10];
-	Vector2 oldWorldPos[10];
 	Vector2 distance[10];
-	Easing easing[10];
-	float  velocity[10];
-	float accelaration[10];
+	Easing easing;
 	float radius[10];
-	int Handle;
-	
+	int Have;
+	int Handle;	
 };
+
+struct BEAM {
+
+	Vertex vertexPos;
+	Vertex vertexWide;
+	Vector2 worldPos;
+	Vector2 screenPos;
+	Vector2 oldWorldPos;  
+	Vector2 distance;
+	Easing easing;
+	float radius;
+	float rotate;
+	int Have;
+	int Handle;
+};
+
 
 struct DISTANCE {
 
-	float enemyANDplayer[10];
+	float enemyANDplayer[enemynum];
 	float itemANDplayer[10];
+	int beamANDenemy[enemynum];
 
 };
 
 struct FLAG {
 	bool isMoveAbove;
 	bool isPlayerEnemyColligion;
-	bool isEnemyDeath[10];
+	bool isEnemyDeath[enemynum];
 	bool isFallStop;
 	bool isFallHighSpeed;
 	bool isFallColl;
@@ -150,6 +165,7 @@ struct FLAG {
 	bool isRightDamage;
 	bool isHitBack;
 	bool isItemGet;
+	bool isSceneChange;
 	int ZoomLevel;
 };
 

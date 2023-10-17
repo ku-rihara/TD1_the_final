@@ -105,7 +105,8 @@ float Clamp(float n, float min, float max) {
 	return n;
 }
 
-float isBoxCollisionBeta(float leftTopX1, float leftTopY1, float rightBottomX1, float rightBottomY1, float leftTopX2, float leftTopY2, float rightBottomX2, float rightBottomY2) {
+int isBoxCollisionBeta(float leftTopX1, float leftTopY1, float rightBottomX1, float rightBottomY1, float leftTopX2, float leftTopY2, float rightBottomX2, float rightBottomY2) {
+
 	if (leftTopX2 < rightBottomX1 && leftTopX1 < rightBottomX2) {
 		if (rightBottomY2 > leftTopY1 && rightBottomY1 > leftTopY2) {
 			return 1;
@@ -246,8 +247,7 @@ float easeOutBounce(float x) {
 	}
 }
 
-void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX) {
-
+void SceneChange(float& posY1, float& posY2, bool& isSceneChange, bool& isScenePlus, float& randomX) {
 	static float t = 0;
 	static float tt = 0;
 	static float x = 0;
@@ -260,7 +260,6 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX
 	static bool isShake = false;
 
 	if (isSceneChange == true) {
-
 		if (t <= 1) {
 			x += 0.01f;
 		}
@@ -272,15 +271,15 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX
 		x = 0;
 		timep = 1;
 	}
-
 	time += timep;
 	if (time > 0 && time < 50) {
 		isShake = true;
+		isScenePlus = true;
 		Shake(randomX, random, isShake, timeS, 20, 10);
 	}
-
-	if (time == 50) {
+	if (time >= 50) {
 		isBack = true;
+		isScenePlus = false;
 	}
 
 	if (isBack == true) {
@@ -288,6 +287,7 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX
 		posY1 = (1.0f - tt) * 355 + tt * -400;
 		posY2 = (1.0f - tt) * 365 + tt * 1080;
 	}
+
 	if (tt >= 1) {
 		t = 0;
 		tt = 0;
@@ -299,11 +299,12 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, float& randomX
 		random = 0;
 		isBack = false;
 		isShake = false;
-
+		isScenePlus = false;
 	}
+
+	Novice::ScreenPrintf(0, 0, "%2.1f", posY1);
 
 	t = easeOutBounce(x);
 	tt = easeOutBounce(xx);
 
 }
-

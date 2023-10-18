@@ -1,6 +1,6 @@
 #pragma once
 
-const int mapx = 66;
+const int mapx = 600;
 const int mapy = 100;
 const int barriaItem = 1;
 const int speedbeam = 2;
@@ -181,6 +181,15 @@ struct MAPCHIP {
 	int number;
 	float size;
 	int Handle;
+};
+
+struct SCORE {
+
+	float num;
+	float saveNum;
+	float realNum;
+	float linearTime;
+	bool isUp;
 };
 
 struct BACKGROUND {

@@ -302,7 +302,7 @@ void SceneChange(float& posY1, float& posY2, bool& isSceneChange, bool& isSceneP
 		isScenePlus = false;
 	}
 
-	Novice::ScreenPrintf(0, 0, "%2.1f", posY1);
+	
 
 	t = easeOutBounce(x);
 	tt = easeOutBounce(xx);

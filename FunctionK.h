@@ -1,10 +1,10 @@
 #pragma once
 
 const int mapx = 500;
-const int mapy = 160;
+const int mapy = 200;
 const int barriaItem = 1;
 const int speedbeam = 2;
-const int enemynum = 10;
+const int enemynum = 40;
 
 struct Vector2 {
 
@@ -86,6 +86,7 @@ struct MAINCHARACTER {
 	float radius;
 	float drawScale;
 	float totalScale;
+	float scaleUpPlus;
 	float ScaleSave;
 	int fallCollTime;
 	int damageCollTime;

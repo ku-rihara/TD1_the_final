@@ -1,7 +1,6 @@
 #pragma once
 
-const int mapx = 500;
-const int mapy = 200;
+
 const int barriaItem = 1;
 const int speedbeam = 2;
 const int enemynum = 40;

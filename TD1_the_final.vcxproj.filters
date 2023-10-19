@@ -135,5 +135,6 @@
     <ClInclude Include="Particle.h">
       <Filter>FunktionS</Filter>
     </ClInclude>
+    <ClInclude Include="map.h" />
   </ItemGroup>
 </Project>

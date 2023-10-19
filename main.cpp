@@ -134,25 +134,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					///敵を配置します------------------------------
 					if (i < 10) {
 						enemy.worldPos[i].x = 1400;
-						enemy.worldPos[i].y = 2500 + float(i) * 100;
+						enemy.worldPos[i].y = 3000 + float(i) * 100;
 					}
 
 					if (i >= 10 && i < 20) {
 
 						enemy.worldPos[i].x = 2200;
-						enemy.worldPos[i].y = 3200 + float(i) * 100;
+						enemy.worldPos[i].y = 3600 + float(i) * 100;
 					}
 
 					if (i >= 20 && i < 30) {
 
 						enemy.worldPos[i].x = 1400;
-						enemy.worldPos[i].y = 4500 + float(i) * 100;
+						enemy.worldPos[i].y = 4900 + float(i) * 100;
 					}
 
 					if (i >= 30 && i < 40) {
 
 						enemy.worldPos[i].x = 4320;
-						enemy.worldPos[i].y = 2500 + float(i) * 100;
+						enemy.worldPos[i].y = 2700 + float(i) * 100;
 					}
 
 					///敵を配置します------------------------------
@@ -249,8 +249,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 		
 			///マップのループ
-			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy-47)) {
-				main.worldPos.x = main.worldPos.x +(48*30);
+			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy-57)) {
+			
+				mapchip.number += 1;
 				main.worldPos.y = 48*13;
 
 				for (int i = 0; i < 3; i++) {

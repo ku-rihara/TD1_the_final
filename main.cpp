@@ -123,6 +123,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				main.velocity.y = 5;
 				main.totalScale = 1.0f;
 				main.drawScale = 1.0f;
+				main.scaleUpPlus = 0.02f;
 			
 
 				///ビームのそれぞれ頂点の中心からの幅
@@ -154,13 +155,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 				///
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < itemnum; i++) {
 
 					///アイテムの半径
 					item.radius[i] = 24;
-					item.worldPos[i].x = 1800;
-					item.worldPos[i].y = 900 + float(i) * 200;
-
+				
 					///アイテムの中心からの頂点
 					item.vertexWide[i].LeftTop = { 48,48 };
 					item.vertexWide[i].RightTop = { 48,48 };
@@ -180,8 +179,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				mapchip.size = 48;
 			
-				
-
 				Scene += 1;
 			
 				break;
@@ -221,9 +218,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				background.back1.y = 720;
 				background.back2.y = 0;
 			}
+
+
 		
 			///マップのループ
-			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy-57)) {
+			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy-60)) {
 			
 				mapchip.number += 1;
 				main.worldPos.y = 48*13;
@@ -271,6 +270,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 								/// 新しい敵を作成して座標を設定
 								enemy.worldPos[mapchip.number][i].x = enemy.Spone.x;
 								enemy.worldPos[mapchip.number][i].y = enemy.Spone.y;
+					
+							/// i をインクリメント
+							i++;
+						}
+					}
+				}
+			}
+
+
+			///アイテムの位置ロード
+			for (int i = 0; i < itemnum; i++) {
+
+				///アイテムを配置------------------------------
+				for (int y = 0; y < mapy; y++) {
+
+					for (int x = 0; x < mapx; x++) {
+
+						if (map[mapchip.number][y][x] == 5) {
+
+								/// マップチップ番号に基づいて座標を設定
+								item.Spone.x = float(x) * 48;
+								item.Spone.y = float(y) * 48;
+
+								/// 新しい敵を作成して座標を設定
+								item.worldPos[mapchip.number][i].x = item.Spone.x;
+								item.worldPos[mapchip.number][i].y = item.Spone.y;
 
 						
 							/// i をインクリメント
@@ -323,10 +348,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				target.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].LeftBottom, 0, target.scale[i]*mapchip.scale);
 				target.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].RightTop, 0, target.scale[i]*mapchip.scale);
 				target.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].RightBottom, 0, target.scale[i]*mapchip.scale);
-
+			
 				///敵がふわふわ動くイージング
-				
-
 				enemy.vertexWide[i].LeftTop.y = easeInSine(enemy.easing, 40, 48);
 				enemy.vertexWide[i].RightTop.y = easeInSine(enemy.easing, 40, 48);
 
@@ -348,13 +371,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			
 			}
 
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < itemnum; i++) {
 
 				///アイテムの頂点座標
-				item.vertexPos[i].LeftTop = LeftTopVertex(item.screenPos[i], item.vertexWide[i].LeftTop, 0, mapchip.scale);
-				item.vertexPos[i].LeftBottom = LeftBottomVertex(item.screenPos[i], item.vertexWide[i].LeftBottom, 0, mapchip.scale);
-				item.vertexPos[i].RightTop = RightTopVertex(item.screenPos[i], item.vertexWide[i].RightTop, 0, mapchip.scale);
-				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[i], item.vertexWide[i].RightBottom, 0, mapchip.scale);
+				item.vertexPos[i].LeftTop = LeftTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftTop, 0, mapchip.scale);
+				item.vertexPos[i].LeftBottom = LeftBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftBottom, 0, mapchip.scale);
+				item.vertexPos[i].RightTop = RightTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightTop, 0, mapchip.scale);
+				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightBottom, 0, mapchip.scale);
 
 				item.radius[i] = 24 * mapchip.scale;
 			}
@@ -378,119 +401,127 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑頂点の座標計算ここから↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-
-			///プレイヤーのX軸の動き-----------------------------------------------------------------------------------------------------------------------------------------
-
-			if (flag.isLeftDamage == 0 && flag.isRightDamage == 0 && flag.isMapZoomInOut == 0) {
-
-				if (keys[DIK_A] || keys[DIK_LEFT]) {
-					main.worldPos.x += -6;
-				}
-
-				if (keys[DIK_D] || keys[DIK_RIGHT]) {
-					main.worldPos.x += 6;
-				}
-			}
-
-			if (flag.isLeftDamage == 1) {
-
-				main.sideDamageTime += 1;
-
-				main.worldPos.x += 18 * 0.2f;
-
-				if (main.sideDamageTime >= 60) {
-
-					flag.isLeftDamage = 0;
-					main.sideDamageTime = 0;
-				}
-			}
-
-			if (flag.isRightDamage == 1) {
-
-				main.sideDamageTime += 1;
-				main.worldPos.x -= 18 * 0.2f;
-
-				if (main.sideDamageTime >= 60) {
-
-					flag.isRightDamage = 0;
-					main.sideDamageTime = 0;
-				}
-			}
-
-			///プレイヤーのY軸の動き----------------------------------------------------------------------------
-
-			if (flag.isFallStop == 0 && flag.isHitBack == 0) {
-
-				main.acceleration.y = 0.005f;
-			}
-
-			///加速度足していき
-			main.velocity.y += main.acceleration.y;
-
-			///座標に速度を足していく
-			main.worldPos.y += main.velocity.y;
+			///ステージ開始前の演出とか色々-------------
+			flag.isGameStart = 1;
 
 
-			///急降下していい状態の時
-			if (flag.isFallColl == 0 && flag.isHitBack == 0) {
-
-				if (keys[DIK_SPACE] && flag.isAnticipation == 0 && flag.isFallHighSpeed == 0) {
-
-					main.velocitySave = main.velocity;///急降下するとき速度を保存
-					main.ScaleSave = main.drawScale;
-					main.saveWorldPos.y = main.worldPos.y;
-					mapchip.saveScale = mapchip.scale;
-					Anticipation.easingPlus = 0.1f;
-
-					flag.isAnticipation = 1;///高速降下予備動作発動
-				}
 
 
-				///予備動作始め
-				if (flag.isAnticipation == 1 && flag.isFallHighSpeed == 0) {
+			///ステージ開始の処理
+			if (flag.isGameStart == 1) {
 
-					Anticipation.easingTime += Anticipation.easingPlus;
+				///プレイヤーのX軸の動き-----------------------------------------------------------------------------------------------------------------------------------------
 
-					main.worldPos.y = easeOutSine(Anticipation, main.saveWorldPos.y, main.saveWorldPos.y - 50);
+				if (flag.isLeftDamage == 0 && flag.isRightDamage == 0 && flag.isMapZoomInOut == 0) {
 
-
-					if (Anticipation.easingTime >= 1.0f) {
-
-						Anticipation.easingPlus = -Anticipation.easingPlus;
+					if (keys[DIK_A] || keys[DIK_LEFT]) {
+						main.worldPos.x += -6;
 					}
 
-					if (Anticipation.easingTime < 0) {
-
-						Anticipation.easingTime = 0;
-						flag.isAnticipation = 0;
-						flag.isFallHighSpeed = 1;
+					if (keys[DIK_D] || keys[DIK_RIGHT]) {
+						main.worldPos.x += 6;
 					}
-
-					/*///早期キャンセル
-					if (keys[DIK_SPACE] == 0 && preKeys[DIK_SPACE] || flag.isDamage == 1) {
-
-						main.velocity = main.velocitySave;
-						flag.isFallHighSpeed = 0;
-						flag.isAnticipation = 0;
-						Anticipation.easingTime = 0;
-						main.worldPos.y = main.saveWorldPos.y - 10;
-					}*/
 				}
 
-				///急降下する
-				if (flag.isFallHighSpeed == 1 && flag.isAnticipation == 0) {
+				if (flag.isLeftDamage == 1) {
 
-					main.velocity.y = 28;
+					main.sideDamageTime += 1;
 
-					///急降下をやめる時は保存した速度になう速度を代入
-					if (keys[DIK_SPACE] == 0 || flag.isDamage == 1) {
+					main.worldPos.x += 18 * 0.2f;
 
-						main.velocity = main.velocitySave;
-						flag.isFallHighSpeed = 0;
+					if (main.sideDamageTime >= 60) {
+
+						flag.isLeftDamage = 0;
+						main.sideDamageTime = 0;
+					}
+				}
+
+				if (flag.isRightDamage == 1) {
+
+					main.sideDamageTime += 1;
+					main.worldPos.x -= 18 * 0.2f;
+
+					if (main.sideDamageTime >= 60) {
+
+						flag.isRightDamage = 0;
+						main.sideDamageTime = 0;
+					}
+				}
+
+				///プレイヤーのY軸の動き----------------------------------------------------------------------------
+
+				if (flag.isFallStop == 0 && flag.isHitBack == 0) {
+
+					main.acceleration.y = 0.005f;
+				}
+
+				///加速度足していき
+				main.velocity.y += main.acceleration.y;
+
+				///座標に速度を足していく
+				main.worldPos.y += main.velocity.y;
+
+
+				///急降下していい状態の時
+				if (flag.isFallColl == 0 && flag.isHitBack == 0) {
+
+					if (keys[DIK_SPACE] && flag.isAnticipation == 0 && flag.isFallHighSpeed == 0) {
+
+						main.velocitySave = main.velocity;///急降下するとき速度を保存
+						main.ScaleSave = main.drawScale;
+						main.saveWorldPos.y = main.worldPos.y;
+						mapchip.saveScale = mapchip.scale;
+						Anticipation.easingPlus = 0.1f;
+
+						flag.isAnticipation = 1;///高速降下予備動作発動
+					}
+
+
+					///予備動作始め
+					if (flag.isAnticipation == 1 && flag.isFallHighSpeed == 0) {
+
+						Anticipation.easingTime += Anticipation.easingPlus;
+
+						main.worldPos.y = easeOutSine(Anticipation, main.saveWorldPos.y, main.saveWorldPos.y - 50);
+
+
+						if (Anticipation.easingTime >= 1.0f) {
+
+							Anticipation.easingPlus = -Anticipation.easingPlus;
+						}
+
+						if (Anticipation.easingTime < 0) {
+
+							Anticipation.easingTime = 0;
+							flag.isAnticipation = 0;
+							flag.isFallHighSpeed = 1;
+						}
+
+						/*///早期キャンセル
+						if (keys[DIK_SPACE] == 0 && preKeys[DIK_SPACE] || flag.isDamage == 1) {
+
+							main.velocity = main.velocitySave;
+							flag.isFallHighSpeed = 0;
+							flag.isAnticipation = 0;
+							Anticipation.easingTime = 0;
+							main.worldPos.y = main.saveWorldPos.y - 10;
+						}*/
+					}
+
+					///急降下する
+					if (flag.isFallHighSpeed == 1 && flag.isAnticipation == 0) {
+
+						main.velocity.y = 28;
+
+						///急降下をやめる時は保存した速度になう速度を代入
+						if (keys[DIK_SPACE] == 0 || flag.isDamage == 1) {
+
+							main.velocity = main.velocitySave;
+							flag.isFallHighSpeed = 0;
+						}
 					}
 				}
 			}
-
 			///プレイヤーのY軸の動き------------------------------------------------------------------------------------------
 
 
@@ -579,9 +610,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < itemnum; i++) {
 
-				distance.itemANDplayer[i] = length(main.worldPos.x - item.worldPos[i].x, main.worldPos.y - item.worldPos[i].y);
+				distance.itemANDplayer[i] = length(main.worldPos.x - item.worldPos[mapchip.number][i].x, main.worldPos.y - item.worldPos[mapchip.number][i].y);
 
 				///アイテム拾ったら
 				if (distance.itemANDplayer[i] <= item.radius[i] + main.radius) {
@@ -639,6 +670,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 			}
 
+			///ヒットバックを開始する
 			if (flag.isHitBack == 1) {
 
 				main.acceleration.y = 0.4f;///加速度いったん無くす
@@ -1046,10 +1078,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				enemy.screenPos[mapchip.number][i].y = (enemy.worldPos[mapchip.number][i].y * mapchip.scale) + mapchip.ScrollPos.y;
 			}
 
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < itemnum; i++) {
 
-				item.screenPos[i].x = (item.worldPos[i].x * mapchip.scale) + mapchip.ScrollPos.x;
-				item.screenPos[i].y = (item.worldPos[i].y * mapchip.scale) + mapchip.ScrollPos.y;
+				item.screenPos[mapchip.number][i].x = (item.worldPos[mapchip.number][i].x * mapchip.scale) + mapchip.ScrollPos.x;
+				item.screenPos[mapchip.number][i].y = (item.worldPos[mapchip.number][i].y * mapchip.scale) + mapchip.ScrollPos.y;
 
 			}
 
@@ -1120,7 +1152,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 	
 				///アイテムの描画
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < itemnum; i++) {
 
 					newDrawQuad(item.vertexPos[i].LeftTop, item.vertexPos[i].RightTop, item.vertexPos[i].LeftBottom, item.vertexPos[i].RightBottom, 0, 0, 48, 48, item.Handle, WHITE);
 				}
@@ -1130,11 +1162,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					if (flag.isEnemyDeath[i] == 0) {
 
+						if (enemy.worldPos[mapchip.number][i].x + mapchip.ScrollPos.x >= -mapchip.size && enemy.worldPos[mapchip.number][i].x + mapchip.ScrollPos.x <= 1280 + mapchip.size && enemy.worldPos[mapchip.number][i].y + mapchip.ScrollPos.y >= -mapchip.size && enemy.worldPos[mapchip.number][i].y + mapchip.ScrollPos.y <= 720 + mapchip.size) {
 
-						newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, enemy.Handle, WHITE);
 
-						newDrawQuad(target.vertexPos[i].LeftTop, target.vertexPos[i].RightTop, target.vertexPos[i].LeftBottom, target.vertexPos[i].RightBottom, 0, 0, 48, 48, target.Handle, WHITE);
 
+							newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, enemy.Handle, WHITE);
+
+							newDrawQuad(target.vertexPos[i].LeftTop, target.vertexPos[i].RightTop, target.vertexPos[i].LeftBottom, target.vertexPos[i].RightBottom, 0, 0, 48, 48, target.Handle, WHITE);
+						}
 					}
 				}
 

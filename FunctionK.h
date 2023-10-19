@@ -4,6 +4,7 @@
 const int barriaItem = 1;
 const int speedbeam = 2;
 const int enemynum = 40;
+const int itemnum = 30;
 
 struct Vector2 {
 
@@ -110,13 +111,14 @@ struct ENEMYCHARACTER {
 
 struct ITEM {
 
-	Vertex vertexPos[10];
-	Vertex vertexWide[10];
-	Vector2 worldPos[10];
-	Vector2 screenPos[10];
-	Vector2 distance[10];
+	Vertex vertexPos[itemnum];
+	Vertex vertexWide[itemnum];
+	Vector2 worldPos[6][itemnum];
+	Vector2 screenPos[6][itemnum];
+	Vector2 distance[itemnum];
+	Vector2 Spone;
 	Easing easing;
-	float radius[10];
+	float radius[itemnum];
 	int Have;
 	int Handle;	
 };
@@ -140,7 +142,7 @@ struct BEAM {
 struct DISTANCE {
 
 	float enemyANDplayer[enemynum];
-	float itemANDplayer[10];
+	float itemANDplayer[itemnum];
 	int beamANDenemy[enemynum];
 
 };

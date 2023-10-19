@@ -96,9 +96,10 @@ struct ENEMYCHARACTER {
 	
 	Vertex vertexPos[enemynum];
 	Vertex vertexWide[enemynum];
-	Vector2 worldPos[enemynum];
-	Vector2 screenPos[enemynum];
+	Vector2 worldPos[6][enemynum];
+	Vector2 screenPos[6][enemynum];
 	Vector2 distance[enemynum];
+	Vector2 Spone;
 	Easing easing;
 	float scale[enemynum];
 	float radius[enemynum];
@@ -164,6 +165,7 @@ struct FLAG {
 	bool isHitBack;
 	bool isItemGet;
 	bool isSceneChange;
+	bool isGameStart;
 	int ZoomLevel;
 };
 

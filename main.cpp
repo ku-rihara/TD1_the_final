@@ -21,6 +21,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	int Scene = 0;
 	
+	///構造体初期化
 	MAINCHARACTER main{};///プレイヤーの初期化
 	ENEMYCHARACTER enemy{};///敵の初期化
 	ENEMYCHARACTER target{};///敵のターゲット
@@ -48,9 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		false
 	};
 
-	main.scaleUpPlus = 0.1f;
-
-
+	
 	///↓↓↓↓↓↓↓↓↓画像初期化↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	int frontBackGround;
 	int BackGround;
@@ -99,6 +98,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				sc.isSceneChange = true;
 			}
 			
+			///シーンチェンジ
 			SceneChange(sc.center1.y, sc.center2.y, sc.isSceneChange, flag.isSceneChange, sc.random.x);
 	
 
@@ -112,47 +112,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				main.vertexWide.LeftBottom = { 48,48 };
 				main.vertexWide.RightBottom = { 48,48 };
 
-				///プレイヤーのそれぞれ頂点の中心からの幅
+				///自機の半径
+				main.radius = 24;
+
+				///プレイヤーの画面上に映し続ける座標
+				main.kameraPos.x = 600;
+				main.kameraPos.y = 200;
+
+				///プレイヤーの初期化
+				main.velocity.y = 5;
+				main.totalScale = 1.0f;
+				main.drawScale = 1.0f;
+			
+
+				///ビームのそれぞれ頂点の中心からの幅
 				beam.vertexWide.LeftTop = { 48,48 };
 				beam.vertexWide.RightTop = { 48,48 };
 				beam.vertexWide.LeftBottom = { 48,48 * 13 };
 				beam.vertexWide.RightBottom = { 48,48 * 13 };
 
-
-				///敵の半径
-				main.radius = 24;
-
-				///敵の位置初期化
+			///敵の初期化
 				for (int i = 0; i < enemynum; i++) {
 
 					///敵の半径
 					enemy.radius[i] = 24;
-
-					///敵を配置します------------------------------
-
-					for (int x = 0; x < mapy; x++) {
-
-						for (int j = 0; j < mapx; j++) {
-
-							if (map[mapchip.number][x][j] == 4) {
-								// マップチップ番号に基づいて座標を設定
-								int mapchipX = j * 48;
-								int mapchipY = x * 48;
-
-								// 新しい敵を作成して座標を設定
-								enemy.worldPos[i].x = float(mapchipX);
-								enemy.worldPos[i].y = float(mapchipY);
-
-								// i をインクリメント
-								i++;
-							}
-						}
-					}
-				}
-
-				for (int i = 0; i < enemynum; i++) {
-
-				///敵を配置します------------------------------
 
 					///エネミーのそれぞれ頂点の中心からの幅
 					enemy.vertexWide[i].LeftTop = { 48,48 };
@@ -167,18 +150,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					target.vertexWide[i].RightBottom = { 48,48 };
 
 					enemyTarget[i].easingPlus = 0.02f;
+					enemy.easing.easingPlus = 0.1f;
 				}
 
-				enemy.easing.easingPlus = 0.1f;
-
-
+				///
 				for (int i = 0; i < 10; i++) {
 
 					///アイテムの半径
 					item.radius[i] = 24;
 					item.worldPos[i].x = 1800;
 					item.worldPos[i].y = 900 + float(i) * 200;
-
 
 					///アイテムの中心からの頂点
 					item.vertexWide[i].LeftTop = { 48,48 };
@@ -187,10 +168,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					item.vertexWide[i].RightBottom = { 48,48 };
 				}
 
-
-				main.drawScale = 1.0f;
+			
 				mapchip.scale = 1.0f;
-				main.totalScale = 1.0f;
+			
 
 				///前背景の初期化
 				background.flont1.y = 720;
@@ -199,18 +179,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				background.back2.y = 0;
 
 				mapchip.size = 48;
-				main.velocity.y = 5;
-
-
-				///プレイヤーの画面上に映し続ける座標
-				main.kameraPos.x = 600;
-				main.kameraPos.y = 200;
+			
+				
 
 				Scene += 1;
 			
 				break;
 
 		case PLAY:
+
 
 			///↓↓↓↓↓↓↓↓ゲームプレイ中の処理ここから↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
@@ -275,6 +252,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 			}
 
+
+			///敵の位置ロード
+			for (int i = 0; i < enemynum; i++) {
+
+				///敵を配置------------------------------
+
+				for (int y = 0; y < mapy; y++) {
+
+					for (int x = 0; x < mapx; x++) {
+
+						if (map[mapchip.number][y][x] == 4) {
+
+								/// マップチップ番号に基づいて座標を設定
+								enemy.Spone.x = float(x) * 48;
+								enemy.Spone.y = float(y) * 48;
+
+								/// 新しい敵を作成して座標を設定
+								enemy.worldPos[mapchip.number][i].x = enemy.Spone.x;
+								enemy.worldPos[mapchip.number][i].y = enemy.Spone.y;
+
+						
+							/// i をインクリメント
+							i++;
+						}
+					}
+				}
+			}
+
 			///↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑背景またはスクロールの処理終わり↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 
@@ -308,16 +313,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///敵の頂点の座標計算
 			for (int i = 0; i < enemynum; i++) {
 
-				enemy.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[i], enemy.vertexWide[i].LeftTop, 0, mapchip.scale);
-				enemy.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[i], enemy.vertexWide[i].LeftBottom, 0, mapchip.scale);
-				enemy.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[i], enemy.vertexWide[i].RightTop, 0, mapchip.scale);
-				enemy.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[i], enemy.vertexWide[i].RightBottom, 0, mapchip.scale);
+				enemy.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].LeftTop, 0, mapchip.scale);
+				enemy.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].LeftBottom, 0, mapchip.scale);
+				enemy.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].RightTop, 0, mapchip.scale);
+				enemy.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].RightBottom, 0, mapchip.scale);
 
 				///ターゲットの座標計算
-				target.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[i], target.vertexWide[i].LeftTop, 0, target.scale[i]*mapchip.scale);
-				target.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[i], target.vertexWide[i].LeftBottom, 0, target.scale[i]*mapchip.scale);
-				target.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[i], target.vertexWide[i].RightTop, 0, target.scale[i]*mapchip.scale);
-				target.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[i], target.vertexWide[i].RightBottom, 0, target.scale[i]*mapchip.scale);
+				target.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].LeftTop, 0, target.scale[i]*mapchip.scale);
+				target.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].LeftBottom, 0, target.scale[i]*mapchip.scale);
+				target.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].RightTop, 0, target.scale[i]*mapchip.scale);
+				target.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].RightBottom, 0, target.scale[i]*mapchip.scale);
 
 				///敵がふわふわ動くイージング
 				
@@ -327,7 +332,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				///ターゲットのイージング
-				if ((enemy.screenPos[i].x) >= 10 && (enemy.screenPos[i].x) <= 1280 && (enemy.screenPos[i].y) >= -10 && (enemy.screenPos[i].y) <= 720 ) {
+				if ((enemy.screenPos[mapchip.number][i].x) >= 10 && (enemy.screenPos[mapchip.number][i].x) <= 1280 && (enemy.screenPos[mapchip.number][i].y) >= -10 && (enemy.screenPos[mapchip.number][i].y) <= 720 ) {
 
 					enemyTarget[i].easingTime += enemyTarget[i].easingPlus;
 
@@ -546,7 +551,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (flag.isEnemyDeath[i] == 0) {
 
 					///敵とプレイヤーのカプセルの距離
-					distance.enemyANDplayer[i] = length(main.worldPos.x - enemy.worldPos[i].x, main.worldPos.y - enemy.worldPos[i].y);
+					distance.enemyANDplayer[i] = length(main.worldPos.x - enemy.worldPos[mapchip.number][i].x, main.worldPos.y - enemy.worldPos[mapchip.number][i].y);
 					distance.beamANDenemy[i] = isBoxCollisionBeta(beam.vertexPos.LeftTop.x, beam.vertexPos.LeftTop.y, beam.vertexPos.RightBottom.x, beam.vertexPos.RightBottom.y, enemy.vertexPos[i].LeftTop.x, enemy.vertexPos[i].LeftTop.y, enemy.vertexPos[i].RightBottom.x, enemy.vertexPos[i].RightBottom.y);
 
 
@@ -1037,8 +1042,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///敵の座標変換
 			for (int i = 0; i < enemynum; i++) {
 
-				enemy.screenPos[i].x = (enemy.worldPos[i].x * mapchip.scale) + mapchip.ScrollPos.x;
-				enemy.screenPos[i].y = (enemy.worldPos[i].y * mapchip.scale) + mapchip.ScrollPos.y;
+				enemy.screenPos[mapchip.number][i].x = (enemy.worldPos[mapchip.number][i].x * mapchip.scale) + mapchip.ScrollPos.x;
+				enemy.screenPos[mapchip.number][i].y = (enemy.worldPos[mapchip.number][i].y * mapchip.scale) + mapchip.ScrollPos.y;
 			}
 
 			for (int i = 0; i < 10; i++) {
@@ -1109,11 +1114,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 								Novice::DrawQuad(int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), 0, 0, 48, 48, mapchip.Handle, WHITE);
 
-								if (map[mapchip.number][i][j] == 4) {
-
-									Novice::DrawQuad(int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), 0, 0, 48, 48, enemy.Handle, WHITE);
-
-								}
 							}
 						}
 					}
@@ -1129,6 +1129,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < enemynum; i++) {
 
 					if (flag.isEnemyDeath[i] == 0) {
+
 
 						newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, enemy.Handle, WHITE);
 

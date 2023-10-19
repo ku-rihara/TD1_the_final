@@ -19,11 +19,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	///シェイクスピア
 	srand(unsigned int(time(nullptr)));
 
-
 	int Scene = 0;
 	
-
-
 	MAINCHARACTER main{};///プレイヤーの初期化
 	ENEMYCHARACTER enemy{};///敵の初期化
 	ENEMYCHARACTER target{};///敵のターゲット
@@ -37,7 +34,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 e{};
 	Vector2 f{};
 	Vector2 Linedistance{};
-
 	Easing Anticipation{};
 	Easing afterimage{};
 	Easing enemyTarget[enemynum]{};
@@ -53,6 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	};
 
 	main.scaleUpPlus = 0.1f;
+
 
 	///↓↓↓↓↓↓↓↓↓画像初期化↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	int frontBackGround;
@@ -104,7 +101,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			
 			SceneChange(sc.center1.y, sc.center2.y, sc.isSceneChange, flag.isSceneChange, sc.random.x);
 	
-			
+
 				///プレイヤーの初期座標
 				main.worldPos.x = 1400;
 				main.worldPos.y = 584;
@@ -132,30 +129,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					enemy.radius[i] = 24;
 
 					///敵を配置します------------------------------
-					if (i < 10) {
-						enemy.worldPos[i].x = 1400;
-						enemy.worldPos[i].y = 3000 + float(i) * 100;
+
+					for (int x = 0; x < mapy; x++) {
+
+						for (int j = 0; j < mapx; j++) {
+
+							if (map[mapchip.number][x][j] == 4) {
+								// マップチップ番号に基づいて座標を設定
+								int mapchipX = j * 48;
+								int mapchipY = x * 48;
+
+								// 新しい敵を作成して座標を設定
+								enemy.worldPos[i].x = float(mapchipX);
+								enemy.worldPos[i].y = float(mapchipY);
+
+								// i をインクリメント
+								i++;
+							}
+						}
 					}
+				}
 
-					if (i >= 10 && i < 20) {
+				for (int i = 0; i < enemynum; i++) {
 
-						enemy.worldPos[i].x = 2200;
-						enemy.worldPos[i].y = 3600 + float(i) * 100;
-					}
-
-					if (i >= 20 && i < 30) {
-
-						enemy.worldPos[i].x = 1400;
-						enemy.worldPos[i].y = 4900 + float(i) * 100;
-					}
-
-					if (i >= 30 && i < 40) {
-
-						enemy.worldPos[i].x = 4320;
-						enemy.worldPos[i].y = 2700 + float(i) * 100;
-					}
-
-					///敵を配置します------------------------------
+				///敵を配置します------------------------------
 
 					///エネミーのそれぞれ頂点の中心からの幅
 					enemy.vertexWide[i].LeftTop = { 48,48 };
@@ -172,7 +169,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					enemyTarget[i].easingPlus = 0.02f;
 				}
 
-				enemy.easing.easingPlus = 0.01f;
+				enemy.easing.easingPlus = 0.1f;
 
 
 				for (int i = 0; i < 10; i++) {
@@ -299,6 +296,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				main.afterimagePos[i].RightBottom = RightBottomVertex(main.afterimageScreenPos[i], main.vertexWide.RightBottom, main.rotate, main.drawScale);
 			}
 
+
+			enemy.easing.easingTime += enemy.easing.easingPlus;
+
+			if (enemy.easing.easingTime >= 1) {
+
+				enemy.easing.easingPlus = -enemy.easing.easingPlus;
+			}
+
+
 			///敵の頂点の座標計算
 			for (int i = 0; i < enemynum; i++) {
 
@@ -313,14 +319,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				target.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[i], target.vertexWide[i].RightTop, 0, target.scale[i]*mapchip.scale);
 				target.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[i], target.vertexWide[i].RightBottom, 0, target.scale[i]*mapchip.scale);
 
-
 				///敵がふわふわ動くイージング
-				enemy.easing.easingTime += enemy.easing.easingPlus;
-
-				if (enemy.easing.easingTime >= 1) {
-
-					enemy.easing.easingPlus = -enemy.easing.easingPlus;
-				}
+				
 
 				enemy.vertexWide[i].LeftTop.y = easeInSine(enemy.easing, 40, 48);
 				enemy.vertexWide[i].RightTop.y = easeInSine(enemy.easing, 40, 48);
@@ -336,7 +336,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						enemyTarget[i].easingTime = 1;
 					}
 
-					target.scale[i] = easeOutBack(enemyTarget[i], 0, 1.3f);			
+					target.scale[i] = easeOutBack(enemyTarget[i], 0, 1.4f);			
 				}
 
 				enemy.radius[i] = 24 * mapchip.scale;
@@ -598,7 +598,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (item.Have == speedbeam) {
 
 				beam.worldPos = main.worldPos;
-
 			}
 
 
@@ -1105,18 +1104,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 						if ((j * mapchip.size + mapchip.ScrollPos.x) >= -mapchip.size && (j * mapchip.size + mapchip.ScrollPos.x) <= 1280 + mapchip.size && (i * mapchip.size + mapchip.ScrollPos.y) >= -mapchip.size && (i * mapchip.size + mapchip.ScrollPos.y) <= 720 + mapchip.size) {
 
-									
 
 							if (map[mapchip.number][i][j] == 1) {
 
 								Novice::DrawQuad(int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), 0, 0, 48, 48, mapchip.Handle, WHITE);
 
+								if (map[mapchip.number][i][j] == 4) {
+
+									Novice::DrawQuad(int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), 0, 0, 48, 48, enemy.Handle, WHITE);
+
+								}
 							}
 						}
 					}
 				}
-
-				
+	
 				///アイテムの描画
 				for (int i = 0; i < 10; i++) {
 

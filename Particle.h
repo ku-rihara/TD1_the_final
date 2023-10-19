@@ -1,14 +1,14 @@
 #pragma once
 
-struct Vector2 {
+struct Vector2B {
 	float x;
 	float y;
 };
 
 struct Particle {
-	Vector2 pos[5][50];
-	Vector2 dir[5][50];
-	Vector2 randomDir[5][50];
+	Vector2B pos[5][50];
+	Vector2B dir[5][50];
+	Vector2B randomDir[5][50];
 	float randomRadius[5][50];
 	float randomSlope[5][50];
 	float slope[5][50];

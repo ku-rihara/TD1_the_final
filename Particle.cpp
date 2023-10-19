@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "Functions.h"
 #include "Particle.h"
+#include"FunctionK.h"
 
 
 void KamiParticle(Particle& par, float posX, float posY, float dirX, float dirY, float range1,float range2) {

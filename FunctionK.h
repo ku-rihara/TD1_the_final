@@ -21,12 +21,10 @@ struct Vertex {
 
 };
 
-
 struct inVector2 {
 	int intx;
 	int inty;
 };
-
 
 struct Easing {
 

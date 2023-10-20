@@ -183,6 +183,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			
 				break;
 
+				///ゲームプレイ画面の処理
+
 		case PLAY:
 
 
@@ -236,16 +238,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < enemynum; i++) {
 
 					enemyTarget[i].easingTime=0;
+					flag.isEnemyDeath[i] = 0;
 				}
 
 				///壊れたマップの復元
-				for (int i = 0; i < mapy; i++) {
+				for (int y = 0; y < mapy; y++) {
 
-					for (int j = 0; j < mapx; j++) {
+					for (int x = 0; x < mapx; x++) {
 
-						if (map[mapchip.number][i][j] == 3) {
+						if (map[mapchip.number][y][x] == 3) {
 
-							map[mapchip.number][i][j] = 1;
+							map[mapchip.number][y][x] = 1;
 						}
 					}
 				}
@@ -255,28 +258,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///敵の位置ロード
 			for (int i = 0; i < enemynum; i++) {
 
-				///敵を配置------------------------------
+				if(flag.isEnemyDeath[i] == 0){
 
+				///敵を配置------------------------------
 				for (int y = 0; y < mapy; y++) {
 
 					for (int x = 0; x < mapx; x++) {
 
 						if (map[mapchip.number][y][x] == 4) {
 
-								/// マップチップ番号に基づいて座標を設定
-								enemy.Spone.x = float(x) * 48;
-								enemy.Spone.y = float(y) * 48;
+							/// マップチップ番号に基づいて座標を設定
+							enemy.Spone.x = float(x) * 48;
+							enemy.Spone.y = float(y) * 48;
 
-								/// 新しい敵を作成して座標を設定
-								enemy.worldPos[mapchip.number][i].x = enemy.Spone.x;
-								enemy.worldPos[mapchip.number][i].y = enemy.Spone.y;
-					
+							/// 新しい敵を作成して座標を設定
+							enemy.worldPos[mapchip.number][i].x = enemy.Spone.x;
+							enemy.worldPos[mapchip.number][i].y = enemy.Spone.y;
+
 							/// i をインクリメント
 							i++;
 						}
 					}
 				}
 			}
+		}
 
 
 			///アイテムの位置ロード
@@ -338,10 +343,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///敵の頂点の座標計算
 			for (int i = 0; i < enemynum; i++) {
 
-				enemy.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].LeftTop, 0, mapchip.scale);
-				enemy.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].LeftBottom, 0, mapchip.scale);
-				enemy.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].RightTop, 0, mapchip.scale);
-				enemy.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].RightBottom, 0, mapchip.scale);
+				enemy.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].LeftTop, 0, enemy.scale[i]*mapchip.scale);
+				enemy.vertexPos[i].LeftBottom = LeftBottomVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].LeftBottom, 0, enemy.scale[i]*mapchip.scale);
+				enemy.vertexPos[i].RightTop = RightTopVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].RightTop, 0, enemy.scale[i]*mapchip.scale);
+				enemy.vertexPos[i].RightBottom = RightBottomVertex(enemy.screenPos[mapchip.number][i], enemy.vertexWide[i].RightBottom, 0, enemy.scale[i]*mapchip.scale);
 
 				///ターゲットの座標計算
 				target.vertexPos[i].LeftTop = LeftTopVertex(enemy.screenPos[mapchip.number][i], target.vertexWide[i].LeftTop, 0, target.scale[i]*mapchip.scale);
@@ -364,7 +369,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						enemyTarget[i].easingTime = 1;
 					}
 
-					target.scale[i] = easeOutBack(enemyTarget[i], 0, 1.4f);			
+					target.scale[i] = easeOutBack(enemyTarget[i], 0, 1.4f);	
+					enemy.scale[i]= easeOutBack(enemyTarget[i], 0, 1);
 				}
 
 				enemy.radius[i] = 24 * mapchip.scale;
@@ -1141,11 +1147,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 						if ((j * mapchip.size + mapchip.ScrollPos.x) >= -mapchip.size && (j * mapchip.size + mapchip.ScrollPos.x) <= 1280 + mapchip.size && (i * mapchip.size + mapchip.ScrollPos.y) >= -mapchip.size && (i * mapchip.size + mapchip.ScrollPos.y) <= 720 + mapchip.size) {
 
-
 							if (map[mapchip.number][i][j] == 1) {
 
 								Novice::DrawQuad(int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), int((mapchip.ScrollPos.x + (j * mapchip.size + mapchip.size + main.damage.random.x))), int((mapchip.ScrollPos.y + (i * mapchip.size + mapchip.size + main.damage.random.y))), 0, 0, 48, 48, mapchip.Handle, WHITE);
-
 							}
 						}
 					}
@@ -1154,7 +1158,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				///アイテムの描画
 				for (int i = 0; i < itemnum; i++) {
 
-					newDrawQuad(item.vertexPos[i].LeftTop, item.vertexPos[i].RightTop, item.vertexPos[i].LeftBottom, item.vertexPos[i].RightBottom, 0, 0, 48, 48, item.Handle, WHITE);
+					if ((item.screenPos[mapchip.number][i].x) >= mapchip.size && (item.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (item.screenPos[mapchip.number][i].y) >= -mapchip.size && (item.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
+
+						newDrawQuad(item.vertexPos[i].LeftTop, item.vertexPos[i].RightTop, item.vertexPos[i].LeftBottom, item.vertexPos[i].RightBottom, 0, 0, 48, 48, item.Handle, WHITE);
+					}
 				}
 
 				///敵の描画
@@ -1162,9 +1169,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					if (flag.isEnemyDeath[i] == 0) {
 
-						if (enemy.worldPos[mapchip.number][i].x + mapchip.ScrollPos.x >= -mapchip.size && enemy.worldPos[mapchip.number][i].x + mapchip.ScrollPos.x <= 1280 + mapchip.size && enemy.worldPos[mapchip.number][i].y + mapchip.ScrollPos.y >= -mapchip.size && enemy.worldPos[mapchip.number][i].y + mapchip.ScrollPos.y <= 720 + mapchip.size) {
-
-
+						///ターゲットのイージング
+						if ((enemy.screenPos[mapchip.number][i].x) >= mapchip.size && (enemy.screenPos[mapchip.number][i].x) <= 1280+ mapchip.size && (enemy.screenPos[mapchip.number][i].y) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].y) <= 720+ mapchip.size) {
 
 							newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, enemy.Handle, WHITE);
 

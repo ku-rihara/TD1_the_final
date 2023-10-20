@@ -116,7 +116,7 @@ struct ITEM {
 	Vector2 worldPos[6][itemnum];
 	Vector2 screenPos[6][itemnum];
 	Vector2 distance[itemnum];
-	Vector2 Spone;
+	Vector2 Spone[6];
 	Easing easing;
 	float radius[itemnum];
 	int Have;
@@ -168,6 +168,7 @@ struct FLAG {
 	bool isItemGet;
 	bool isSceneChange;
 	bool isGameStart;
+	bool isBeamShot;
 	int ZoomLevel;
 };
 

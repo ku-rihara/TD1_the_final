@@ -268,12 +268,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (map[mapchip.number][y][x] == 4) {
 
 							/// マップチップ番号に基づいて座標を設定
-							enemy.Spone.x = float(x) * 48;
-							enemy.Spone.y = float(y) * 48;
+							enemy.Spone[mapchip.number].x = float(x) * 48;
+							enemy.Spone[mapchip.number].y = float(y) * 48;
 
 							/// 新しい敵を作成して座標を設定
-							enemy.worldPos[mapchip.number][i].x = enemy.Spone.x;
-							enemy.worldPos[mapchip.number][i].y = enemy.Spone.y;
+							enemy.worldPos[mapchip.number][i].x = enemy.Spone[mapchip.number].x;
+							enemy.worldPos[mapchip.number][i].y = enemy.Spone[mapchip.number].y;
 
 							/// i をインクリメント
 							i++;
@@ -292,7 +292,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					for (int x = 0; x < mapx; x++) {
 
-						if (map[mapchip.number][y][x] == 5) {
+						if (map[mapchip.number][y][x] == 5 && mapchip.number == mapchip.number) {
 
 								/// マップチップ番号に基づいて座標を設定
 								item.Spone.x = float(x) * 48;

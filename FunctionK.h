@@ -3,7 +3,7 @@
 
 const int barriaItem = 1;
 const int speedbeam = 2;
-const int enemynum = 40;
+const int enemynum = 60;
 const int itemnum = 30;
 
 struct Vector2 {
@@ -100,7 +100,7 @@ struct ENEMYCHARACTER {
 	Vector2 worldPos[6][enemynum];
 	Vector2 screenPos[6][enemynum];
 	Vector2 distance[enemynum];
-	Vector2 Spone;
+	Vector2 Spone[6];
 	Easing easing;
 	float scale[enemynum];
 	float radius[enemynum];

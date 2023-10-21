@@ -1021,16 +1021,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (map[mapchip.number][int(main.oldMapNumber.RightTop.y)][int(main.mapNumber.RightTop.x)] != 1 && map[mapchip.number][int(main.oldMapNumber.RightBottom.y)][int(main.mapNumber.RightBottom.x)] != 1 &&
 					map[mapchip.number][int(main.oldMapNumber.LeftTop.y)][int(main.mapNumber.LeftTop.x)] != 1 && map[mapchip.number][int(main.oldMapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] != 1) {
 
+					if (flag.isDamageColl == 0) {
+						///ｙ軸に当たった時の斜め反応
+						main.worldPos.y = float(main.fitMapSize.inty-10);
 
-					///ｙ軸に当たった時の斜め反応
-					main.worldPos.y = float(main.fitMapSize.inty);
-
-					flag.isFallStop = 1;///急降下いったん止める
-					flag.isFallColl = 1;
-					flag.isDamage = 1;///ダメージを受ける
-					main.damage.isShake = 1;///シェイクを開始する
-					main.damage.shakeTime = 30;///シェイクの時間を決める
-
+						flag.isFallStop = 1;///急降下いったん止める
+						flag.isFallColl = 1;
+						flag.isDamage = 1;///ダメージを受ける
+						main.damage.isShake = 1;///シェイクを開始する
+						main.damage.shakeTime = 30;///シェイクの時間を決める
+					}
 
 					/*///マップの破壊（どしゃん）
 					if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
@@ -1064,24 +1064,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					///ｘ軸に当たった時の斜め反応
 					main.worldPos.x = float(main.fitOldMapSize.intx);
 
+					if (flag.isDamageColl == 0) {
+						///マップの破壊（どしゃん）
+						if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
 
-					///マップの破壊（どしゃん）
-					if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
-				
-						flag.isLeftDamage = 1;
-						flag.isDamage = 1;///ダメージを受ける
-						main.damage.isShake = 1;///シェイクを開始する
-						main.damage.shakeTime = 30;///シェイクの時間を決める
-					}
+							flag.isLeftDamage = 1;
+							flag.isDamage = 1;///ダメージを受ける
+							main.damage.isShake = 1;///シェイクを開始する
+							main.damage.shakeTime = 30;///シェイクの時間を決める
+						}
 
-					///マップの破壊（どしゃん）
-					if (map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.mapNumber.RightBottom.x)] == 1) {
+						///マップの破壊（どしゃん）
+						if (map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.mapNumber.RightBottom.x)] == 1) {
 
-				
-						flag.isRightDamage = 1;
-						flag.isDamage = 1;///ダメージを受ける
-						main.damage.isShake = 1;///シェイクを開始する
-						main.damage.shakeTime = 30;///シェイクの時間を決める
+
+							flag.isRightDamage = 1;
+							flag.isDamage = 1;///ダメージを受ける
+							main.damage.isShake = 1;///シェイクを開始する
+							main.damage.shakeTime = 30;///シェイクの時間を決める
+						}
 					}
 				}
 
@@ -1144,15 +1145,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 						if (flag.isMoveAbove == 1) {
 
-							main.fitOldMapSize.inty += 4;
+							main.fitOldMapSize.inty -= 4;
 						}
 
 						///マップの破壊
 						if (map[mapchip.number][y][x] == 1) {
 
 							main.worldPos.y = float(main.fitOldMapSize.inty);
-							flag.isDamage = 1;///ダメージを受ける
-
+							if (flag.isDamageColl == 0) {
+								flag.isDamage = 1;///ダメージを受ける
+							}
 						
 						}
 					}

@@ -137,6 +137,10 @@ void newDrawBox(float x, float y, float width,float heigth,int color) {
 
 }
 
+float Liner(Easing x, float start, float end) {
+
+	return (1 - x.easingTime) * start + x.easingTime * end;
+}
 
 float easeInSine(Easing x, float start, float end) {
 

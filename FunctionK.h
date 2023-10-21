@@ -5,6 +5,7 @@ const int barriaItem = 1;
 const int speedbeam = 2;
 const int enemynum = 60;
 const int itemnum = 30;
+const int piecesnum = 30;
 
 struct Vector2 {
 
@@ -123,6 +124,21 @@ struct ITEM {
 	int Handle;	
 };
 
+struct PIECES {
+
+	Vertex vertexPos[piecesnum];
+	Vertex vertexWide[piecesnum];
+	Vector2 worldPos[6][piecesnum];
+	Vector2 screenPos[6][piecesnum];
+	Vector2 distance[piecesnum];
+	Vector2 Spone[6];
+	Easing easing;
+	float radius[piecesnum];
+	int Have;
+	int Handle;
+};
+
+
 struct BEAM {
 
 	Vertex vertexPos;
@@ -151,6 +167,7 @@ struct FLAG {
 	bool isMoveAbove;
 	bool isPlayerEnemyColligion;
 	bool isEnemyDeath[enemynum];
+	bool isPiecesNone[piecesnum];
 	bool isFallStop;
 	bool isFallHighSpeed;
 	bool isFallColl;
@@ -169,6 +186,7 @@ struct FLAG {
 	bool isSceneChange;
 	bool isGameStart;
 	bool isBeamShot;
+	bool scaleUpget;
 	int ZoomLevel;
 };
 
@@ -235,6 +253,8 @@ void newScreenPrintf(int x, int y, float num);
 void newScreenPrintf(int x, int y, int num);
 
 void newDrawBox(float x, float y, float width, float heigth, int color);
+
+float Liner(Easing x, float start, float end);
 
 float easeInSine(Easing x, float start,float end);
 

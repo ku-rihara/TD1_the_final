@@ -218,10 +218,12 @@ struct MAPCHIP {
 
 struct SCORE {
 
-	float num;
+	int num;
 	float saveNum;
 	float realNum;
 	float linearTime;
+	float upnum;
+	int number[7];
 	bool isUp;
 };
 

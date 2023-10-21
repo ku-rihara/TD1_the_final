@@ -53,6 +53,9 @@
     <ClCompile Include="Particle.cpp">
       <Filter>FunktionS</Filter>
     </ClCompile>
+    <ClCompile Include="acceleratingEffect.cpp">
+      <Filter>FunktionS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -136,5 +139,8 @@
       <Filter>FunktionS</Filter>
     </ClInclude>
     <ClInclude Include="map.h" />
+    <ClInclude Include="acceleratingEffect.h">
+      <Filter>FunktionS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

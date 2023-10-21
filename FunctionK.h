@@ -1,6 +1,6 @@
 #pragma once
 
-
+const int tutorial = 0;
 const int barriaItem = 1;
 const int speedbeam = 2;
 const int enemynum = 60;
@@ -34,6 +34,7 @@ struct Easing {
 	float easingTime;
 	float result;
 	float easingPlus;
+	float nextCount;
 	
 };
 
@@ -42,6 +43,14 @@ struct SHAKE {
 	Vector2 random;
 	int shakeTime;
 	bool isShake;
+};
+
+struct Mask {
+	Vector2 pos;
+	Vector2 endPos;
+	float radius;
+	bool isPause;
+	bool isBack;
 };
 
 struct SceneChangeP {
@@ -152,6 +161,7 @@ struct BEAM {
 	float rotate;
 	int Have;
 	int Handle;
+	float scale;
 };
 
 
@@ -184,9 +194,11 @@ struct FLAG {
 	bool isHitBack;
 	bool isItemGet;
 	bool isSceneChange;
-	bool isGameStart;
 	bool isBeamShot;
 	bool scaleUpget;
+	bool isGameStart;
+	bool isTutorialSkip;
+	bool isStageChange;
 	int ZoomLevel;
 };
 
@@ -260,7 +272,7 @@ float easeInSine(Easing x, float start,float end);
 
 float easeOutSine(Easing x, float start, float end);
 
-float easeOutBack(Easing x, float start, float end);
+float easeOutBack1(Easing x, float start, float end);
 
 float easeInBack(Easing x, float start, float end);
 
@@ -276,5 +288,8 @@ float dot(float dx, float ex, float dy, float ey);
 
 float length(float a, float b);
 
+float easeOutBack(float x);
+
+void MaskProcess(Vector2& pos, const Vector2& endPos, float& radius, bool& isPause, bool& isBack,float endradius);
 
 

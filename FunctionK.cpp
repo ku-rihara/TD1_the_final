@@ -165,7 +165,7 @@ float easeInBack(Easing x, float start, float end) {
 	return (1 - x.result) * start + x.result * end;
 }
 
-float easeOutBack(Easing x, float start, float end) {
+float easeOutBack1(Easing x, float start, float end) {
 
 	float c1 = 1.70158f;
 	float c3 = c1 + 1;
@@ -234,3 +234,62 @@ float length(float a, float b) {
 }
 
 
+void MaskProcess(Vector2& pos, const Vector2& endPos, float& radius, bool& isPause, bool& isBack,float endradius) {
+	static float x = 0;
+	static float xp = 0;
+	static float t = 0;
+	static float radx = 0;
+	static float radxp = 0;
+	static float radt = 0;
+	static float backx = 0;
+	static float backxp = 0;
+	static float backt = 0;
+
+	if (isPause == true) {
+		xp = 0.02f;
+		radxp = 0.01f;
+		if (t >= 0.99f) {
+			t = 1.0f;
+			xp = 0;
+		}
+		if (radt >= 0.99f) {
+			radt = 1.0f;
+			radxp = 0;
+		}
+		x += xp;
+		radx += radxp;
+		t = x;
+		radt = easeOutBack(radx);
+		pos.x = (1.0f - t) * pos.x + t * endPos.x;
+		pos.y = (1.0f - t) * pos.y + t * endPos.y;
+		radius = (1.0f - radt) * radius + radt * endradius;
+	}
+	else {
+		x = 0;
+		radx = 0;
+		t = 0;
+		radt = 0;
+		pos.x = 640;
+		pos.y = 320;
+		if (isBack == true) {
+			backxp = 0.02f;
+			if (backt >= 0.99f) {
+				backt = 0;
+				backxp = 0;
+				backx = 0;
+				isBack = false;
+				radius = 800;
+			}
+			backx += backxp;
+			backt = easeOutBack(backx);
+			radius = (1.0f - backt) * endradius + backt * 800;
+		}
+	}
+	
+}
+
+float easeOutBack(float x) {
+	const float c1 = 1.70158f;
+	const float c3 = c1 + 1;
+	return 1 + c3 * powf(x - 1, 3) + c1 * powf(x - 1, 2);
+}

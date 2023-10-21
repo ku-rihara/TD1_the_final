@@ -7,6 +7,7 @@
 #include"FunctionS.h"
 #include"map.h"
 #include "Particle.h"
+#include"acceleratingEffect.h"
 
 const char kWindowTitle[] = "LC1A_11_クリハラ_ケイタ_タイトル";
 
@@ -21,8 +22,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	int Scene = 0;
 
-	
-	
+
 	///構造体初期化
 	MAINCHARACTER main{};///プレイヤーの初期化
 	ENEMYCHARACTER enemy{};///敵の初期化
@@ -42,6 +42,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Easing afterimage{};
 	Easing enemyTarget[enemynum]{};
 	SCORE score{};
+	Mask mask {};
+	BEAM box{};
+	AcceleratingEffect ac{};
 
 	SceneChangeP sc{
 		{0,0},
@@ -52,7 +55,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		false
 	};
 
-	for (int r = 0; r < 6; r++) {
+
+	for (int r = 0; r < 7; r++) {
 		
 	///敵の位置ロード
     	for (int i = 0; i < enemynum; i++) {
@@ -84,7 +88,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 
-	for (int r = 0; r < 6; r++) {
+	for (int r = 0; r < 7; r++) {
 
 		///アイテムの位置ロード
 		for (int z = 0; z < itemnum; z++) {
@@ -115,7 +119,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 
-	for (int r = 0; r < 6; r++) {
+	for (int r = 0; r < 7; r++) {
 
 		///大きくなるかけらの位置ロード
 		for (int p = 0; p < piecesnum; p++) {
@@ -157,7 +161,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int sceneChangeHandle;
 	int sceneChangeHandle2;
 	
-	
+	box.Handle= Novice::LoadTexture("white1x1.png");
 	main.Handle = Novice::LoadTexture("./Resources./Images./player1-3.png");
 	enemy.Handle = Novice::LoadTexture("./Resources./Images./enemy.png");
 	target.Handle= Novice::LoadTexture("./Resources./Images./scope4.png");
@@ -205,6 +209,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///シーンチェンジ
 			SceneChange(sc.center1.y, sc.center2.y, sc.isSceneChange, flag.isSceneChange, sc.random.x);
 	
+			if (flag.isSceneChange == 1) {
 
 				///プレイヤーの初期座標
 				main.worldPos.x = 1400;
@@ -216,6 +221,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				main.vertexWide.LeftBottom = { 48,48 };
 				main.vertexWide.RightBottom = { 48,48 };
 
+				///矩形
+				box.vertexWide.LeftTop = { 48,48 };
+				box.vertexWide.RightTop = { 48,48 };
+				box.vertexWide.LeftBottom = { 48,48 };
+				box.vertexWide.RightBottom = { 48,48 };
+
 				///自機の半径
 				main.radius = 24;
 
@@ -226,9 +237,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				///プレイヤーの初期化
 				main.velocity.y = 5;
 				main.totalScale = 1.0f;
-				main.drawScale = 1.0f;
-			
-			
+				main.drawScale = 1.5f;
+
 
 				///ビームのそれぞれ頂点の中心からの幅
 				beam.vertexWide.LeftTop = { 48,48 };
@@ -236,7 +246,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				beam.vertexWide.LeftBottom = { 48,48 * 13 };
 				beam.vertexWide.RightBottom = { 48,48 * 13 };
 
-			///敵の初期化
+				///敵の初期化
 				for (int i = 0; i < enemynum; i++) {
 
 					///敵の半径
@@ -263,7 +273,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					///アイテムの半径
 					item.radius[i] = 24;
-				
+
 					///アイテムの中心からの頂点
 					item.vertexWide[i].LeftTop = { 48,48 };
 					item.vertexWide[i].RightTop = { 48,48 };
@@ -282,9 +292,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					pieces.vertexWide[i].LeftBottom = { 48,48 };
 					pieces.vertexWide[i].RightBottom = { 48,48 };
 				}
-		
+
 				mapchip.scale = 0.8f;
-			
+
 				///前背景の初期化
 				background.flont1.y = 720;
 				background.flont2.y = 0;
@@ -292,9 +302,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				background.back2.y = 0;
 
 				mapchip.size = 48;
-			
+
+
+				///重要変数初期化
+				box.rotate = (1.0f / 4.0f) * float(M_PI);
+				box.easing.easingPlus = 0.04f;
+				box.screenPos.x = 640;
+				box.screenPos.y = 320;
+
 				Scene += 1;
-			
+			}
 				///タイトル画面の処理ここまで-----------------------------------------------------------------------------------------------------------------
 
 				break;
@@ -334,31 +351,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				background.back2.y = 0;
 			}
 
-
-		
-			///マップのループ
-			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy-60)) {
 			
-				mapchip.number += 1;
-				main.worldPos.y = 48*13;
+			///マップのループ
+			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy-60)&&mapchip.number!=tutorial) {
+			
+				flag.isStageChange = 1;		
+			}
 
+
+			if (flag.isStageChange == 1) {
+
+				mapchip.number += 1;
+
+				main.worldPos.y = 48 * 13;
+
+				///残像の
 				for (int i = 0; i < 3; i++) {
 
 					main.afterimageWorldPos[i].x = main.worldPos.x;
 					main.afterimageWorldPos[i].y = main.worldPos.y;
 				}
 
+				///敵を生き返らせる
 				for (int i = 0; i < enemynum; i++) {
 
-					enemyTarget[i].easingTime=0;
+					enemyTarget[i].easingTime = 0;
 					flag.isEnemyDeath[i] = 0;
 				}
 
+				///かけらを生き返らせる
 				for (int p = 0; p < piecesnum; p++) {
 					flag.isPiecesNone[p] = 0;
 				}
 
-				///壊れたマップの復元
+				flag.isStageChange = 0;
+
+				/*///壊れたマップの復元
 				for (int y = 0; y < mapy; y++) {
 
 					for (int x = 0; x < mapx; x++) {
@@ -368,7 +396,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							map[mapchip.number][y][x] = 1;
 						}
 					}
-				}
+				}*/
+
 			}
 
 
@@ -383,6 +412,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.vertexPos.LeftBottom = LeftBottomVertex(main.screenPos, main.vertexWide.LeftBottom, main.rotate, mapchip.scale *main.drawScale);
 			main.vertexPos.RightTop = RightTopVertex(main.screenPos, main.vertexWide.RightTop, main.rotate, mapchip.scale *main.drawScale);
 			main.vertexPos.RightBottom = RightBottomVertex(main.screenPos, main.vertexWide.RightBottom,main.rotate, mapchip.scale * main.drawScale);
+
+			///プレイヤーの4頂点の座標計算
+			box.vertexPos.LeftTop = LeftTopVertex(box.screenPos, box.vertexWide.LeftTop, box.rotate, box.scale);
+			box.vertexPos.LeftBottom = LeftBottomVertex(box.screenPos, box.vertexWide.LeftBottom, box.rotate, box.scale);
+			box.vertexPos.RightTop = RightTopVertex(box.screenPos, box.vertexWide.RightTop, box.rotate,  box.scale);
+			box.vertexPos.RightBottom = RightBottomVertex(box.screenPos, box.vertexWide.RightBottom, box.rotate,  box.scale);
 
 			///残像4頂点の座標計算
 			for (int i = 0; i < 3; i++) {
@@ -431,7 +466,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						enemyTarget[i].easingTime = 1;
 					}
 
-					target.scale[i] = easeOutBack(enemyTarget[i], 0, 1.4f);		
+					target.scale[i] = easeOutBack1(enemyTarget[i], 0, 1.4f);		
 				}
 
 				enemy.radius[i] = 24 * mapchip.scale;		
@@ -478,16 +513,53 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑頂点の座標計算ここから↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-			///ステージ開始前の演出とか色々-------------
-			flag.isGameStart = 1;
+	
+			
+		///チュートリアル画面の処理
+			if (mapchip.number == tutorial) {
 
+			///飛ばすよ
+				if (keys[DIK_K] && preKeys[DIK_K] == 0&& flag.isTutorialSkip ==0 ) {
+					
+					flag.isTutorialSkip = 1;		
+				}		
+			}
+			
+			///チュートリアルスキップ演出
+			if (flag.isTutorialSkip == 1) {
+
+				box.easing.easingTime += box.easing.easingPlus;
+				box.rotate += 0.2f;
+
+				if (box.easing.easingTime >= 1.0f&&mapchip.number==tutorial) {
+
+					box.easing.nextCount += 1;
+					
+					if (box.easing.nextCount >= 30) {
+						///プレイヤーの初期座標
+						main.worldPos.x = 1600;
+						main.worldPos.y = 584;
+						flag.isStageChange = 1;
+						box.easing.easingPlus = -box.easing.easingPlus;			
+					}
+				}
+
+				if (box.easing.easingTime <= 0) {
+					box.easing.easingTime = 0;
+					flag.isTutorialSkip = 0;
+					
+				}
+
+				box.scale = Liner(box.easing, 0, 20);
+			
+			}
 
 			///ステージ開始の処理
-			if (flag.isGameStart == 1) {
 
+			if (flag.isGameStart == 1 || mapchip.number == tutorial) {
 				///プレイヤーのX軸の動き-----------------------------------------------------------------------------------------------------------------------------------------
 
-				if (flag.isLeftDamage == 0 && flag.isRightDamage == 0 ) {
+				if (flag.isLeftDamage == 0 && flag.isRightDamage == 0) {
 
 					if (keys[DIK_A] || keys[DIK_LEFT]) {
 						main.worldPos.x += -6;
@@ -536,15 +608,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				///座標に速度を足していく
 				main.worldPos.y += main.velocity.y;
 
+				
+				
+					
 
 				///急降下していい状態の時
-				if (flag.isFallColl == 0 && flag.isHitBack == 0 &&flag.isDamageColl==0 ) {
+				if (flag.isFallColl == 0 && flag.isHitBack == 0 && flag.isDamageColl == 0) {
 
 
 					if (keys[DIK_SPACE] && flag.isAnticipation == 0 && flag.isFallHighSpeed == 0 && item.Have != 2) {
 
 						main.velocitySave = main.velocity;///急降下するとき速度を保存
-						
+
 						main.saveWorldPos.y = main.worldPos.y;
 						mapchip.saveScale = mapchip.scale;
 						Anticipation.easingPlus = 0.1f;
@@ -573,25 +648,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 
 						///早期キャンセル
-						if (  flag.isDamage == 1) {
+						if (flag.isDamage == 1) {
 
 							main.velocity = main.velocitySave;
 							flag.isFallHighSpeed = 0;
 							flag.isAnticipation = 0;
 							Anticipation.easingTime = 0;
-						
+
 						}
 					}
 
 					///急降下する
 					if (flag.isFallHighSpeed == 1 && flag.isAnticipation == 0) {
 
-			
-							main.velocity.y = 24;
-						
+						ac.isTrigger = true;
+
+						acceleratingEffect(ac, 5, 1, 1, 1);
+						main.velocity.y = 24;
+
 
 						///急降下をやめる時は保存した速度になう速度を代入
-						if (keys[DIK_SPACE] == 0 || flag.isDamage == 1|| item.Have == 2) {
+						if (keys[DIK_SPACE] == 0 || flag.isDamage == 1 || item.Have == 2) {
 
 							main.velocity = main.velocitySave;
 							flag.isFallHighSpeed = 0;
@@ -835,7 +912,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				main.scaleDown.easingTime += 0.05f;
 
-				main.drawScale = easeOutBack(main.scaleDown, main.ScaleSave, main.ScaleSave - 0.2f);
+				main.drawScale = easeOutBack1(main.scaleDown, main.ScaleSave, main.ScaleSave - 0.2f);
 
 				if (main.scaleDown.easingTime >= 1.0f) {
 
@@ -850,8 +927,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///自機の大きさ1より小さければ固定
-			if (main.drawScale < 1) {
-				main.drawScale = 1;
+			if (main.drawScale < 1.3) {
+				main.drawScale = 1.3f;
 			}
 
 			///プレイヤーが大きくなる処理
@@ -859,7 +936,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				main.scaleUp.easingTime += 0.05f;
 
-				main.drawScale = easeOutBack(main.scaleUp, main.ScaleSave, main.ScaleSave + main.scaleUpPlus);
+				main.drawScale = easeOutBack1(main.scaleUp, main.ScaleSave, main.ScaleSave + main.scaleUpPlus);
 
 				if (main.scaleUp.easingTime >= 1.0f) {
 
@@ -1168,7 +1245,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///↑↑↑↑↑↑↑マップチップの当たり判定ここまで↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 			///↓↓↓↓↓↓↓↓↓↓↓↓↓演出系ここから↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+			
+			if (mapchip.number != tutorial) {
 
+				if (keys[DIK_P] && preKeys[DIK_P] == 0) {
+
+					if (mask.isPause == false) {
+						mask.isPause = true;
+						mask.isBack = false;
+						main.velocitySave.y = main.velocity.y;
+					}
+
+					else {
+						mask.isPause = false;
+						mask.isBack = true;
+					}
+				}
+
+				mask.pos.x = main.screenPos.x;
+				mask.pos.y = main.screenPos.y;
+				mask.endPos.x = main.screenPos.x;
+				mask.endPos.y = main.screenPos.y;
+				mask.radius = 800;
+
+				MaskProcess(mask.pos, mask.endPos, mask.radius, mask.isPause, mask.isBack, 100);
+			}
 			Shake(main.damage.random.x, main.damage.random.y, main.damage.isShake, main.damage.shakeTime, 20, 20);
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑↑演出系ここまで↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -1249,13 +1350,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			case PLAY:
 
+				if (mask.isPause == true) {
+
+					Novice::SetBlendMode(BlendMode::kBlendModeNormal);
+					Novice::DrawBox(0, 0, 1280, 800, 0.0f, BLACK, kFillModeSolid);
+
+					if (mask.isPause == true || mask.isBack == true) {
+
+						Novice::SetBlendMode(BlendMode::kBlendModeAdd);
+						Novice::DrawEllipse(int(mask.pos.x), int(mask.pos.y), int(mask.radius), int(mask.radius), 0.0f, WHITE, kFillModeSolid);
+						Novice::SetBlendMode(BlendMode::kBlendModeMultily);
+					}
+
+				}
+
 				///背景の描画
 				Novice::DrawSprite(int(0 + main.damage.random.x), int(background.back1.y + main.damage.random.y), BackGround, 1, 1, 0, WHITE);
 				Novice::DrawSprite(int(0 + main.damage.random.x), int(background.back2.y + main.damage.random.y), BackGround, 1, 1, 0, WHITE);
-				Novice::DrawSprite(0, int(background.flont1.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
+			/*	Novice::DrawSprite(0, int(background.flont1.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
 				Novice::DrawSprite(0, int(background.flont2.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
+				*/
+				
+				///急降下する
+				if (flag.isFallHighSpeed == 1 && flag.isAnticipation == 0) {
 
-
+					for (int i = 0; i < iMax2; i++) {
+						for (int j = 0; j < jMax2; j++) {
+							Novice::DrawLine(int(ac.pos[i][j].x), int(ac.pos[i][j].y), int(ac.pos2[i][j].x), int(ac.pos2[i][j].y), WHITE);
+						}
+					}
+				}
 				///アイテムの描画
 				for (int i = 0; i < itemnum; i++) {
 
@@ -1310,17 +1434,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 	
-				
-				///残像の描画
-				for (int i = 0; i < 3; i++) {
-
-					Novice::DrawEllipse(int(main.afterimageScreenPos[i].x), int(main.afterimageScreenPos[i].y), int(24 * main.drawScale), int(24 * main.drawScale), 0, 0xff000011, kFillModeSolid);
+				if (mask.isPause == true) {
+					Novice::SetBlendMode(BlendMode::kBlendModeAdd);
 				}
-
+				
 				///プレイヤーの描画
 				newDrawQuad(main.vertexPos.LeftTop, main.vertexPos.RightTop, main.vertexPos.LeftBottom, main.vertexPos.RightBottom, 0, 0, 48, 48, main.Handle, WHITE);
 
-				Novice::DrawEllipse(int(main.screenPos.x), int(main.screenPos.y), int(main.radius), int(main.radius), 0, WHITE, kFillModeWireFrame);
+				
+				///boxの描画
+				newDrawQuad(box.vertexPos.LeftTop, box.vertexPos.RightTop, box.vertexPos.LeftBottom, box.vertexPos.RightBottom, 0, 0, 48, 48, box.Handle, WHITE);
 
 
 				///かわいいシーン遷移

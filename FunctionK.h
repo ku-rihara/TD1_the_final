@@ -3,7 +3,7 @@
 const int tutorial = 0;
 const int barriaItem = 1;
 const int speedbeam = 2;
-const int enemynum = 60;
+const int enemynum = 40;
 const int itemnum = 30;
 const int piecesnum = 30;
 
@@ -35,7 +35,7 @@ struct Easing {
 	float result;
 	float easingPlus;
 	float nextCount;
-	
+	float isback;
 };
 
 struct SHAKE {
@@ -99,8 +99,8 @@ struct MAINCHARACTER {
 	int fallCollTime;
 	int damageCollTime;
 	int hitBackTime;
-	int Handle;
-	
+	int tutorialtime;
+	int Handle;	
 };
 
 struct ENEMYCHARACTER {
@@ -159,6 +159,7 @@ struct BEAM {
 	Easing easing;
 	float radius;
 	float rotate;
+	int time;
 	int Have;
 	int Handle;
 	float scale;
@@ -178,6 +179,7 @@ struct FLAG {
 	bool isPlayerEnemyColligion;
 	bool isEnemyDeath[enemynum];
 	bool isPiecesNone[piecesnum];
+	bool isItemNone[itemnum];
 	bool isFallStop;
 	bool isFallHighSpeed;
 	bool isFallColl;
@@ -199,6 +201,14 @@ struct FLAG {
 	bool isGameStart;
 	bool isTutorialSkip;
 	bool isStageChange;
+	bool isStop;
+	bool isStopNext;
+	bool isHowtoPlay1;
+	bool isHowtoPlay2;
+	bool isHowtoPlay3;
+	bool isHowtoPlay4;
+	bool isTutorialGo;
+	bool isFever;
 	int ZoomLevel;
 };
 
@@ -219,9 +229,11 @@ struct MAPCHIP {
 struct SCORE {
 
 	int num;
+	int enemycount;
 	float saveNum;
 	float realNum;
 	float linearTime;
+	int feverTime;
 	float upnum;
 	int number[7];
 	bool isUp;

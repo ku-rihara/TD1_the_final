@@ -177,7 +177,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	mapchip.Handle = Novice::LoadTexture("./Resources./Images./block.png");///マップチップの画像
 	item.Handle = Novice::LoadTexture("./Resources./Images./SkillBox.png");
 	beam.Handle= Novice::LoadTexture("white1x1.png");
-	pieces.Handle= Novice::LoadTexture("white1x1.png");
+	pieces.Handle= Novice::LoadTexture("./Resources./Images./point.png");
 	numberHandle= Novice::LoadTexture("./Resources./Images./number.png");
 	frontBackGround = Novice::LoadTexture("./Resources./Images./backgrondA.png");
 	BackGround = Novice::LoadTexture("./Resources./Images./BackGroundB.png");
@@ -342,6 +342,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				flag.isTutorialGo = 0;
 				main.tutorialtime = 0;
 				flag.isFallHighSpeed = 0;
+				pieces.easing.easingPlus = 0.04f;
+				pieces.easing.easingTime = 0;
 
 				beam.time = 0;
 				item.Have = 0;
@@ -403,7 +405,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			SceneChange(sc.center1.y, sc.center2.y, sc.isSceneChange, flag.isSceneChange, sc.random.x);
 
-			if (flag.isStop == 0) {
+			if (flag.isStop == 0&&flag.isGameStart==1) {
 				///前背景の移動
 				background.flont1.y -= main.velocity.y * 0.1f;
 				background.flont2.y -= main.velocity.y * 0.1f;
@@ -459,15 +461,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					flag.isPiecesNone[p] = 0;
 				}
 
-				for (int i = 0; i < piecesnum; i++) {
-
-					flag.isPiecesNone[i] = 0;
-				}
-			
+				
 
 				flag.isStageChange = 0;
 
-				/*///壊れたマップの復元
+				///壊れたマップの復元
 				for (int y = 0; y < mapy; y++) {
 
 					for (int x = 0; x < mapx; x++) {
@@ -477,7 +475,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							map[mapchip.number][y][x] = 1;
 						}
 					}
-				}*/
+				}
 			}
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑背景またはスクロールの処理終わり↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -540,6 +538,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 
+			pieces.easing.easingTime += pieces.easing.easingPlus;
+
+			if (pieces.easing.easingTime > 1|| pieces.easing.easingTime<0) {
+
+				pieces.easing.easingPlus = -pieces.easing.easingPlus;
+			}
+
+			///kakeraがふわふわ動くイージング
+			pieces.scale = easeOutBack1(pieces.easing, 0.8f, 1.0f);
+
 			///敵の頂点の座標計算
 			for (int i = 0; i < enemynum; i++) {
 
@@ -558,6 +566,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				enemy.vertexWide[i].LeftTop.y = easeInSine(enemy.easing, 40, 48);
 				enemy.vertexWide[i].RightTop.y = easeInSine(enemy.easing, 40, 48);
 
+				
 
 				///ターゲットのイージング
 				if ((enemy.screenPos[mapchip.number][i].x) >= -10 && (enemy.screenPos[mapchip.number][i].x) <= 1280 && (enemy.screenPos[mapchip.number][i].y) >= -10 && (enemy.screenPos[mapchip.number][i].y) <= 720) {
@@ -584,17 +593,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightBottom, 0, mapchip.scale);
 
 				item.radius[i] = 24 * mapchip.scale;
+
 			}
 
 			for (int i = 0; i < piecesnum; i++) {
 
 				///大きくなるかけらの頂点座標
-				pieces.vertexPos[i].LeftTop = LeftTopVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].LeftTop, 0, mapchip.scale);
-				pieces.vertexPos[i].LeftBottom = LeftBottomVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].LeftBottom, 0, mapchip.scale);
-				pieces.vertexPos[i].RightTop = RightTopVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].RightTop, 0, mapchip.scale);
-				pieces.vertexPos[i].RightBottom = RightBottomVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].RightBottom, 0, mapchip.scale);
+				pieces.vertexPos[i].LeftTop = LeftTopVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].LeftTop, 0, pieces.scale*mapchip.scale);
+				pieces.vertexPos[i].LeftBottom = LeftBottomVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].LeftBottom, 0, pieces.scale* mapchip.scale);
+				pieces.vertexPos[i].RightTop = RightTopVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].RightTop, 0, pieces.scale*mapchip.scale);
+				pieces.vertexPos[i].RightBottom = RightBottomVertex(pieces.screenPos[mapchip.number][i], pieces.vertexWide[i].RightBottom, 0, pieces.scale* mapchip.scale);
 
 				pieces.radius[i] = 24 * mapchip.scale;
+
+
 			}
 
 			///ビームの頂点座標
@@ -677,8 +689,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						flag.isStop = 0;
 					}
 						///スケールをイージングさせる
-					tutorialbord.scale = easeOutBack1(tutorialbord.easing, 0, 1);
-					
+					tutorialbord.scale = easeOutBack1(tutorialbord.easing, 0, 1);					
 				}
 
 				//最初のチュートリアル表示
@@ -932,8 +943,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 						///急降下をやめる時は保存した速度になう速度を代入
 						if (keys[DIK_SPACE] == 0 || flag.isDamage == 1 || item.Have == 2||flag.isStop==1) {
-
-							
+			
 							flag.isFallHighSpeed = 0;
 						}
 					}
@@ -996,8 +1006,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					if (distance.enemyANDplayer[i] <= enemy.radius[i] + main.radius && flag.isFallHighSpeed == 0) {
 	   
 						flag.isEnemyDeath[i] = 1;
-						main.damage.isShake = 1;///シェイクを開始する
-						main.damage.shakeTime = 30;///シェイクの時間を決める
+					
 					}
 
 					///敵を倒す処理（）
@@ -1033,7 +1042,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			///アイテム取った――
 			if (flag.isItemGet == 1) {
 
-				item.Have = 2;
+				item.Have = rand()%2;
 				flag.isItemGet = 0;
 			}
 
@@ -1261,7 +1270,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				score.num =int( (1 - score.linearTime) * score.saveNum + score.linearTime * score.realNum);
 			}
 
-			if (score.enemycount >= 10&&fever.isEasing==0&&flag.isFever==0) {
+			if (score.enemycount >= 5&&fever.isEasing==0&&flag.isFever==0) {
 
 			
 				fever.easingPlus = 0.03f;
@@ -1271,6 +1280,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				fever.isback = 0;
 				fever.nextCount = 0;
 				flag.isFever = 1;
+				flag.isStop = 1;
 			}
 
 			///	フィーバーを始めようか
@@ -1294,13 +1304,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 				///イージング終わる
-				if (fever.isback == 1) {
+				if (fever.isback == 1&&flag.isfeverTimedown==0) {
 
 					if (fever.easingTime <= 0) {
-					
+						flag.isStop = 0;
 						fever.isEasing = 0;
 						fever.easingTime = 0;
 						fever.easingPlus = 0;
+						flag.isfeverTimedown = 1;
 					}
 				}
 
@@ -1313,25 +1324,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					mapchip.scale = Liner(fever, 0.6f, 2.0f);
 			  	}
-
-				main.worldPos.y= Liner(fever, main.saveWorldPos.y, main.saveWorldPos.y);
-
 			}
 
 			///フィーバー時の処理
 			if (flag.isFever == 1) {
 
-				score.feverTime -= 1;
-				
+				if (flag.isfeverTimedown == 1) {
+
+					score.feverTime -= 1;
+				}
 
 				if (score.feverTime <= 0) {
 					score.feverTime = 0;
 					flag.isFever = 0;
 					score.enemycount = 0;
+					flag.isfeverTimedown = 0;
 				}
 			}
 
-			flag.isGameStart = 1;
+			
 
 			///スコア--------------------------------------------------------------------------------------------------------
 
@@ -1952,11 +1963,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				///背景の描画
 				Novice::DrawSprite(int(0 + main.damage.random.x), int(background.back1.y + main.damage.random.y), BackGround, 1, 1, 0, WHITE);
 				Novice::DrawSprite(int(0 + main.damage.random.x), int(background.back2.y + main.damage.random.y), BackGround, 1, 1, 0, WHITE);
-				Novice::DrawSprite(0, int(background.flont1.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
-				Novice::DrawSprite(0, int(background.flont2.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
+				Novice::DrawSprite(int(0 + main.damage.random.x), int(background.flont1.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
+				Novice::DrawSprite(int(0 + main.damage.random.x), int(background.flont2.y + main.damage.random.y), frontBackGround, 1, 1, 0, WHITE);
 				
 				
-				///急降下する
+				/*///急降下する
 				if (flag.isFallHighSpeed == 1 && flag.isAnticipation == 0) {
 
 					for (int i = 0; i < iMax2; i++) {
@@ -1964,13 +1975,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							Novice::DrawLine(int(ac.pos[i][j].x), int(ac.pos[i][j].y), int(ac.pos2[i][j].x), int(ac.pos2[i][j].y), WHITE);
 						}
 					}
-				}
+				}*/
+
 				///アイテムの描画
 				for (int i = 0; i < itemnum; i++) {
 
 					if (flag.isItemNone[i] == 0 && fever.isEasing == 0) {
 
-						if ((item.screenPos[mapchip.number][i].x) >= mapchip.size && (item.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (item.screenPos[mapchip.number][i].y) >= -mapchip.size && (item.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
+						if ((item.screenPos[mapchip.number][i].x) >= -mapchip.size && (item.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (item.screenPos[mapchip.number][i].y) >= -mapchip.size && (item.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
 
 							newDrawQuad(item.vertexPos[i].LeftTop, item.vertexPos[i].RightTop, item.vertexPos[i].LeftBottom, item.vertexPos[i].RightBottom, 0, 0, 72, 72, item.Handle, WHITE);
 						}
@@ -1982,7 +1994,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					if (flag.isPiecesNone[i] == 0 && fever.isEasing == 0) {
 
-						if ((pieces.screenPos[mapchip.number][i].x) >= mapchip.size && (pieces.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (pieces.screenPos[mapchip.number][i].y) >= -mapchip.size && (pieces.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
+						if ((pieces.screenPos[mapchip.number][i].x) >= -mapchip.size && (pieces.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (pieces.screenPos[mapchip.number][i].y) >= -mapchip.size && (pieces.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
 
 							newDrawQuad(pieces.vertexPos[i].LeftTop, pieces.vertexPos[i].RightTop, pieces.vertexPos[i].LeftBottom, pieces.vertexPos[i].RightBottom, 0, 0, 48, 48, pieces.Handle, WHITE);
 						}
@@ -2075,7 +2087,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				newScreenPrintf(0, 60, main.totalScale);
 				newScreenPrintf(0, 80, main.drawScale);
 				newScreenPrintf(0, 100, flag.isStop);
-				newScreenPrintf(0, 120, flag.isStopNext);
+				newScreenPrintf(0, 120, score.enemycount);
 
 				newScreenPrintf(600,0, score.num);
 

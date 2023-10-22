@@ -145,6 +145,7 @@ struct PIECES {
 	float radius[piecesnum];
 	int Have;
 	int Handle;
+	float scale;
 };
 
 
@@ -209,6 +210,7 @@ struct FLAG {
 	bool isHowtoPlay4;
 	bool isTutorialGo;
 	bool isFever;
+	bool isfeverTimedown;
 	int ZoomLevel;
 };
 

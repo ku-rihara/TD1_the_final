@@ -3,7 +3,7 @@
 const int tutorial = 0;
 const int barriaItem = 1;
 const int speedbeam = 2;
-const int enemynum = 100;
+const int enemynum = 60;
 const int itemnum = 30;
 const int piecesnum = 30;
 const int mapnumm = 7;
@@ -180,7 +180,7 @@ struct DISTANCE {
 struct FLAG {
 	bool isMoveAbove;
 	bool isPlayerEnemyColligion;
-	bool isEnemyDeath[enemynum];
+	bool isEnemyDeath[mapnumm][enemynum];
 	bool isPiecesNone[piecesnum];
 	bool isItemNone[itemnum];
 	bool isFallStop;

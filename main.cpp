@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	///敵の位置ロード
     	for (int i = 0; i < enemynum; i++) {
 
-		    if (flag.isEnemyDeath[i] == 0) {
+		    if (flag.isEnemyDeath[mapchip.number][i] == 0) {
 
 			///敵を配置------------------------------
 				for (int y = 0; y < mapy; y++) {
@@ -445,7 +445,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < enemynum; i++) {
 
 					enemyTarget[i].easingTime = 0;
-					flag.isEnemyDeath[i] = 0;
+					flag.isEnemyDeath[mapchip.number][i] = 0;
 				}
 
 				///かけらを生き返らせる
@@ -1014,7 +1014,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			for (int i = 0; i < enemynum; i++) {
 
-				if (flag.isEnemyDeath[i] == 0&&fever.isEasing==0) {
+				if (flag.isEnemyDeath[mapchip.number][i] == 0&&fever.isEasing==0) {
 
 					///敵とプレイヤーのカプセルの距離
 					distance.enemyANDplayer[i] = length(main.worldPos.x - enemy.worldPos[mapchip.number][i].x, main.worldPos.y - enemy.worldPos[mapchip.number][i].y);
@@ -1024,19 +1024,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					///急降下してない状態で当たったら
 					if (distance.enemyANDplayer[i] <= enemy.radius[i] + main.radius && flag.isFallHighSpeed == 0) {
 	   
-						flag.isEnemyDeath[i] = 1;
+						flag.isEnemyDeath[mapchip.number][i] = 1;
 					
 					}
 
 					///敵を倒す処理（）
 					if (distance.enemyANDplayer[i] <= enemy.radius[i] + main.radius && flag.isFallHighSpeed == 1 || distance.beamANDenemy[i] == 1 && flag.isBeamShot == 1) {
 
-						flag.isEnemyDeath[i] = 1;
+						flag.isEnemyDeath[mapchip.number][i] = 1;
 						flag.isHit = 1;
 					}
 				}
 
-				if (flag.isEnemyDeath[i] == 1) {
+				if (flag.isEnemyDeath[mapchip.number][i] == 1) {
 
 					///敵が死ぬ処理----++++++エフェクトとか
 				}
@@ -2011,7 +2011,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					///敵の描画
 					for (int i = 0; i < enemynum; i++) {
 
-						if (flag.isEnemyDeath[i] == 0 && fever.isEasing == 0 ) {
+						if (flag.isEnemyDeath[mapchip.number][i] == 0 && fever.isEasing == 0 ) {
 
 
 							if ((enemy.screenPos[mapchip.number][i].x) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (enemy.screenPos[mapchip.number][i].y) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {

@@ -3,7 +3,7 @@
 const int tutorial = 0;
 const int barriaItem = 1;
 const int speedbeam = 2;
-const int enemynum = 40;
+const int enemynum = 100;
 const int itemnum = 30;
 const int piecesnum = 30;
 
@@ -100,6 +100,7 @@ struct MAINCHARACTER {
 	int damageCollTime;
 	int hitBackTime;
 	int tutorialtime;
+	int startTime;
 	int Handle;	
 };
 
@@ -221,7 +222,7 @@ struct MAPCHIP {
 	Vertex pos;
 	Vertex wide;
 	Easing zoomInOut;
-	float scale;
+	float zoomScale;
 	float saveScale;
 	int number;
 	float size;

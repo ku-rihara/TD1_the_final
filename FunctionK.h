@@ -239,8 +239,10 @@ struct SCORE {
 	float linearTime;
 	int feverTime;
 	float upnum;
+	Vector2 allpos;
 	int number[7];
-	bool isUp;
+	bool isChange;
+	bool isDown;
 };
 
 struct BACKGROUND {
@@ -249,6 +251,25 @@ struct BACKGROUND {
 	Vector2 flont2;
 	Vector2 back1;
 	Vector2 back2;
+};
+
+struct NUMBER {
+	Vector2 pos;
+	Vector2 limitdownpos;
+	int secondcount;
+	int minutecount;
+	int second;
+	int second10;
+	int minute;
+	int stoptimer;
+	int leftover;
+	int Handle;
+	int limitHandle;
+	int limitdownHandle;
+	int color;
+	int iszero;
+
+	Easing e;
 };
 
 enum Scene {

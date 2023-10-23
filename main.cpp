@@ -43,6 +43,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Easing enemyTarget[enemynum]{};
 	Easing fever{};
 	Easing gamestart{};
+	Easing last1{};
 	SCORE score{};
 	Mask mask {};
 	BEAM box{};
@@ -51,6 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	BEAM tutorialbord3{};
 	BEAM tutorialbord4{};
 	AcceleratingEffect ac{};
+	NUMBER clock{};
 
 	SceneChangeP sc{
 		{0,0},
@@ -170,6 +172,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int sceneChangeHandle;
 	int sceneChangeHandle2;
 	int numberHandle;
+	int scoreHandle;
+	int tenHandle;
 	
 	box.Handle= Novice::LoadTexture("white1x1.png");
 	main.Handle = Novice::LoadTexture("./Resources./Images./player1-3.png");
@@ -184,6 +188,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	BackGround = Novice::LoadTexture("./Resources./Images./BackGroundB.png");
 	sceneChangeHandle=Novice::LoadTexture("./Resources./Images./SceneChange1.png");
 	sceneChangeHandle2=Novice::LoadTexture("./Resources./Images./SceneChange2.png");
+	scoreHandle= Novice::LoadTexture("./Resources./Images./score.png");
+	tenHandle= Novice::LoadTexture("./Resources./Images./ten.png");
+	clock.limitHandle= Novice::LoadTexture("./Resources./Images./timelimit.png");
 
 	///ちゅーとりある　
 	tutorialbord.Handle = Novice::LoadTexture("./Resources./Images./tutorial.png");
@@ -388,6 +395,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				tutorialbord4.easing.easingTime = 0;
 				tutorialbord4.scale = 0;
 
+				//タイム初期化
+				clock.secondcount = 0;
+				clock.minutecount = 0;
+
+				clock.second = 0;
+				clock.second10 = 0;
+				clock.minute = 4;
+				clock.stoptimer = 0;
+
+				clock.color = WHITE;
+
+				last1.isEasing = 0;
+
+
+
 				Scene += 1;
 			}
 			///タイトル画面の処理ここまで-----------------------------------------------------------------------------------------------------------------
@@ -406,6 +428,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			SceneChange(sc.center1.y, sc.center2.y, sc.isSceneChange, flag.isSceneChange, sc.random.x);
 
 			if (flag.isStop == 0&&flag.isGameStart==1) {
+
 				///前背景の移動
 				background.flont1.y -= main.velocity.y * 0.1f;
 				background.flont2.y -= main.velocity.y * 0.1f;
@@ -837,10 +860,60 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			if (gamestart.isEasing == 1) {
 
-				flag.isGameStart = 1;
+				gamestart.easingTime += 0.02f;
+
+				if (gamestart.easingTime >= 1) {
+					gamestart.easingTime = 1;
+				}
+
+				score.allpos.y = easeOutBack1(gamestart, -200, 80);
 			}
 		
+			///ゲームハジマタ
 			if (flag.isGameStart == 1 || flag.isTutorialGo==1) {
+
+				if (flag.isGameStart == 1 && flag.isStop == 0) {
+
+					clock.secondcount -= 1;
+
+
+					//秒
+					if (clock.secondcount < 0) {
+						clock.second -= 1;
+						clock.secondcount = 60;
+					}
+
+					//秒10
+					if (clock.second < 0) {
+						clock.second10 -= 1;
+						clock.second = 9;
+					}
+
+					//分
+					if (clock.second10 < 0) {
+						clock.second10 = 5;
+						clock.minute -= 1;
+					}
+
+
+					if (clock.minute == 0 && clock.color == WHITE && last1.isEasing == 0) {
+
+						clock.second10 = 5;
+						clock.second = 9;
+						clock.iszero = 1;
+						clock.color = RED;
+						clock.minute = 0;
+
+						last1.isEasing = 1;
+
+					}
+
+					if (clock.minute <= 0 && clock.second10 <= 0 && clock.second <= 0) {
+
+						clock.stoptimer = 1;
+
+					}
+				}
 
 				///プレイヤーのX軸の動き-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1027,6 +1100,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						flag.isEnemyDeath[mapchip.number][i] = 1;
 					
 					}
+					
 
 					///敵を倒す処理（）
 					if (distance.enemyANDplayer[i] <= enemy.radius[i] + main.radius && flag.isFallHighSpeed == 1 || distance.beamANDenemy[i] == 1 && flag.isBeamShot == 1) {
@@ -1124,6 +1198,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				main.scaleUp.easingTime = 0;
 				main.scaleDown.easingTime = 0;
 				flag.isDamageColl = 1;
+				score.isDown = 1;
 				flag.isDamage = 0;
 
 
@@ -1244,12 +1319,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			///スコア--------------------------------------------------------------------------------------------------------
 
+			if (score.isDown == 1) {
+
+				if (score.num > 500) {
+					score.realNum -= 500;
+				}
+
+				score.saveNum = float(score.num);
+				score.linearTime = 0;
+				score.isChange = 1;
+
+				score.isDown = 0;
+
+			}
+
 			///ヒットカウントを足していく
 			if (flag.isHit == 1) {
 
 				enemy.hitConbo += 1;
 				score.enemycount += 1;
-				score.realNum += 10 * enemy.hitConbo;
+				score.realNum += 50 * enemy.hitConbo;
 				flag.isHit = 0;
 
 				if (flag.isFever == 0) {
@@ -1259,7 +1348,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				///スコアだよー
 				score.saveNum = float(score.num);
 				score.linearTime = 0;
-				score.isUp = 1;
+				score.isChange = 1;
 			}
 
 			///１コンボしたらコンボチェインを発動
@@ -1277,7 +1366,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 		
 			///スコア上げ
-			if (score.isUp==1) {
+			if (score.isChange==1) {
 
 				score.linearTime += 0.02f;
 
@@ -1289,6 +1378,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				score.num =int( (1 - score.linearTime) * score.saveNum + score.linearTime * score.realNum);
 			}
 
+			
 			if (score.enemycount >= 5&&fever.isEasing==0&&flag.isFever==0&&mapchip.number != tutorial) {
 
 				fever.easingPlus = 0.03f;
@@ -1361,7 +1451,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			
-
 			///スコア--------------------------------------------------------------------------------------------------------
 
 
@@ -1498,6 +1587,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 							}
 						}
+
 						///マップの破壊（どしゃん）
 						if (map[mapchip.number][int(main.mapNumber.LeftTop.y)][int(main.mapNumber.LeftTop.x)] == 1) {
 
@@ -2006,13 +2096,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 					}
 				}
-
-			
+	
 					///敵の描画
 					for (int i = 0; i < enemynum; i++) {
 
 						if (flag.isEnemyDeath[mapchip.number][i] == 0 && fever.isEasing == 0 ) {
-
 
 							if ((enemy.screenPos[mapchip.number][i].x) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (enemy.screenPos[mapchip.number][i].y) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
 
@@ -2020,8 +2108,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 								newDrawQuad(target.vertexPos[i].LeftTop, target.vertexPos[i].RightTop, target.vertexPos[i].LeftBottom, target.vertexPos[i].RightBottom, 0, 0, 48, 48, target.Handle, WHITE);
 							}
-						}
-					
+						}			
 			    	}
 
 				if (flag.isBeamShot == 1) {
@@ -2047,8 +2134,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//	数字だわよ
 				for (int i = 0; i < 7; i++) {
 					
-						Novice::DrawSpriteRect(i*150, 500, score.number[i]*144,0,144,144, numberHandle, 0.1f, 1, 0.0f, WHITE);
+						Novice::DrawSpriteRect(900+i*50, int(score.allpos.y), score.number[i]*64,0,64,64, numberHandle, 0.1f, 1, 0.0f, WHITE);
 				}
+
+				///スコアって文字
+				Novice::DrawSprite(950, int(score.allpos.y-55), scoreHandle, 1, 1, 0, WHITE);
+
+				
+					//残り時間って文字
+				Novice::DrawSprite(155, int(score.allpos.y - 55), clock.limitHandle, 1, 1, 0, WHITE);
+
+				//分
+				Novice::DrawSpriteRect(140, int(score.allpos.y), clock.minute * 64, 0, 64, 64, numberHandle, 0.1f, 1, 0,WHITE);
+
+				//：：ってん
+				Novice::DrawSprite(185, int(score.allpos.y), tenHandle, 1, 1, 0, WHITE);
+
+
+				//秒10
+				Novice::DrawSpriteRect(240, int(score.allpos.y), clock.second10 * 64, 0, 64, 64, numberHandle, 0.1f, 1, 0, WHITE);
+
+				//秒
+				Novice::DrawSpriteRect(290, int(score.allpos.y), clock.second * 64, 0, 64, 64, numberHandle, 0.1f, 1, 0, WHITE);
+
 
 				if (mask.isPause == true) {
 					Novice::SetBlendMode(BlendMode::kBlendModeAdd);
@@ -2057,13 +2165,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				///プレイヤーの描画
 				newDrawQuad(main.vertexPos.LeftTop, main.vertexPos.RightTop, main.vertexPos.LeftBottom, main.vertexPos.RightBottom, 0, 0, 48, 48, main.Handle, WHITE);
 
-				/*for (int i = 0; i < 7; i++) {
 				
-						Novice::DrawSpriteRect(100, 100, score.number[i] * 48, 0, 48, 48, numberHandle, 1, 1, 0.0f, WHITE);
-
-					}
-				}*/
-
 				///チュートリアル中の描画
 				if (flag.isGameStart == 0) {
 

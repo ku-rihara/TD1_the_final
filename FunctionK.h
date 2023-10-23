@@ -6,6 +6,7 @@ const int speedbeam = 2;
 const int enemynum = 100;
 const int itemnum = 30;
 const int piecesnum = 30;
+const int mapnumm = 7;
 
 struct Vector2 {
 
@@ -108,10 +109,10 @@ struct ENEMYCHARACTER {
 	
 	Vertex vertexPos[enemynum];
 	Vertex vertexWide[enemynum];
-	Vector2 worldPos[6][enemynum];
-	Vector2 screenPos[6][enemynum];
+	Vector2 worldPos[mapnumm][enemynum];
+	Vector2 screenPos[mapnumm][enemynum];
 	Vector2 distance[enemynum];
-	Vector2 Spone[6];
+	Vector2 Spone[mapnumm];
 	Easing easing;
 	float scale[enemynum];
 	float radius[enemynum];
@@ -124,10 +125,10 @@ struct ITEM {
 
 	Vertex vertexPos[itemnum];
 	Vertex vertexWide[itemnum];
-	Vector2 worldPos[6][itemnum];
-	Vector2 screenPos[6][itemnum];
+	Vector2 worldPos[mapnumm][itemnum];
+	Vector2 screenPos[mapnumm][itemnum];
 	Vector2 distance[itemnum];
-	Vector2 Spone[6];
+	Vector2 Spone[mapnumm];
 	Easing easing;
 	float radius[itemnum];
 	int Have;
@@ -138,10 +139,10 @@ struct PIECES {
 
 	Vertex vertexPos[piecesnum];
 	Vertex vertexWide[piecesnum];
-	Vector2 worldPos[6][piecesnum];
-	Vector2 screenPos[6][piecesnum];
+	Vector2 worldPos[mapnumm][piecesnum];
+	Vector2 screenPos[mapnumm][piecesnum];
 	Vector2 distance[piecesnum];
-	Vector2 Spone[6];
+	Vector2 Spone[mapnumm];
 	Easing easing;
 	float radius[piecesnum];
 	int Have;

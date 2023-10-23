@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	};
 
 
-	for (int r = 0; r < 7; r++) {
+	for (int r = 0; r < mapnumm; r++) {
 		
 	///敵の位置ロード
     	for (int i = 0; i < enemynum; i++) {
@@ -94,7 +94,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 
-	for (int r = 0; r < 7; r++) {
+	for (int r = 0; r < mapnumm; r++) {
 
 		///アイテムの位置ロード
 		for (int z = 0; z < itemnum; z++) {
@@ -128,7 +128,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 
-	for (int r = 0; r < 7; r++) {
+	for (int r = 0; r < mapnumm; r++) {
 
 		///大きくなるかけらの位置ロード
 		for (int p = 0; p < piecesnum; p++) {
@@ -329,7 +329,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				background.back2.y = 0;
 
 			
-
 				///重要変数初期化
 				box.rotate = (1.0f / 4.0f) * float(M_PI);
 				box.easing.easingPlus = 0.04f;
@@ -434,14 +433,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (mapchip.ScrollPos.y <= -mapchip.size * (mapy - 60) && mapchip.number != tutorial) {
 
 				flag.isStageChange = 1;
-			}
-			
-
-			if (flag.isStageChange == 1) {
-
-				mapchip.number += 1;
-
-				main.worldPos.y = 48 * 13;
 
 				///残像の
 				for (int i = 0; i < 3; i++) {
@@ -462,10 +453,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					flag.isPiecesNone[p] = 0;
 				}
 
-				
-
-				flag.isStageChange = 0;
-
 				///壊れたマップの復元
 				for (int y = 0; y < mapy; y++) {
 
@@ -477,6 +464,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 					}
 				}
+
+			}
+			
+
+			if (flag.isStageChange == 1) {
+
+				
+
+				main.worldPos.y = 48 * 13;
+
+				
+
+				flag.isStageChange = 0;
+
+
+
+				mapchip.number += 1;
 			}
 
 			///↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑背景またはスクロールの処理終わり↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -680,6 +684,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							tutorialbord.easing.easingPlus = -tutorialbord.easing.easingPlus;
 						}
 					}
+
 					///逆再生時、０になったら０で固定する
 					if (tutorialbord.easing.easingTime <= 0 && tutorialbord.easing.isback == 1) {
 
@@ -708,12 +713,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							tutorialbord2.easing.easingPlus = -tutorialbord2.easing.easingPlus;
 						}
 					}
+
 					///逆再生時、０になったら０で固定する
 					if (tutorialbord2.easing.easingTime <= 0 && tutorialbord2.easing.isback == 1) {
 
 						tutorialbord2.easing.easingTime = 0;
 						flag.isStop = 0;
 					}
+
 					///スケールをイージングさせる
 					tutorialbord2.scale = easeOutBack1(tutorialbord2.easing, 0, 1);
 
@@ -790,6 +797,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						///プレイヤーの初期座標
 						main.worldPos.x = 1600;
 						main.worldPos.y = 584;
+						main.velocity.y = 5;
 						flag.isStageChange = 1;
 						flag.isTutorialGo = 0;
 						box.easing.easingPlus = -box.easing.easingPlus;
@@ -876,7 +884,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				if (flag.isFallStop == 0 && flag.isHitBack == 0&&flag.isStop == 0) {
 
-					main.acceleration.y = 0.005f;
+					main.acceleration.y = 0.002f;
 				}
 
 				else if(flag.isFallStop == 1 && flag.isStop == 1) {
@@ -885,6 +893,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (flag.isStop == 0) {
 					///加速度足していき
 					main.velocity.y += main.acceleration.y;
+
+					if (main.velocity.y >= 20) {
+						main.velocity.y = 20;
+					}
 
 					if (flag.isFallHighSpeed == 0 && flag.isAnticipation == 0 ) {
 						///座標に速度を足していく
@@ -1140,7 +1152,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///ヒットバックを開始する
-			if (flag.isHitBack == 1) {
+			if (flag.isHitBack == 1&&flag.isFever==0) {
 
 				main.acceleration.y = 0.4f;///加速度いったん無くす
 
@@ -1886,7 +1898,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///かけら
-			for (int p = 0; p < itemnum; p++) {
+			for (int p = 0; p < piecesnum; p++) {
 
 				pieces.screenPos[mapchip.number][p].x = (pieces.worldPos[mapchip.number][p].x * mapchip.zoomScale) + mapchip.ScrollPos.x;
 				pieces.screenPos[mapchip.number][p].y = (pieces.worldPos[mapchip.number][p].y * mapchip.zoomScale) + mapchip.ScrollPos.y;
@@ -1995,20 +2007,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-				///敵の描画
-				for (int i = 0; i < enemynum; i++) {
+			
+					///敵の描画
+					for (int i = 0; i < enemynum; i++) {
 
-					if (flag.isEnemyDeath[i] == 0&&fever.isEasing==0) {
+						if (flag.isEnemyDeath[i] == 0 && fever.isEasing == 0 ) {
 
 
-						if ((enemy.screenPos[mapchip.number][i].x) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (enemy.screenPos[mapchip.number][i].y) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
+							if ((enemy.screenPos[mapchip.number][i].x) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].x) <= 1280 + mapchip.size && (enemy.screenPos[mapchip.number][i].y) >= -mapchip.size && (enemy.screenPos[mapchip.number][i].y) <= 720 + mapchip.size) {
 
-							newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, enemy.Handle, WHITE);
+								newDrawQuad(enemy.vertexPos[i].LeftTop, enemy.vertexPos[i].RightTop, enemy.vertexPos[i].LeftBottom, enemy.vertexPos[i].RightBottom, 0, 0, 48, 48, enemy.Handle, WHITE);
 
-							newDrawQuad(target.vertexPos[i].LeftTop, target.vertexPos[i].RightTop, target.vertexPos[i].LeftBottom, target.vertexPos[i].RightBottom, 0, 0, 48, 48, target.Handle, WHITE);
+								newDrawQuad(target.vertexPos[i].LeftTop, target.vertexPos[i].RightTop, target.vertexPos[i].LeftBottom, target.vertexPos[i].RightBottom, 0, 0, 48, 48, target.Handle, WHITE);
+							}
 						}
-					}
-				}
+					
+			    	}
 
 				if (flag.isBeamShot == 1) {
 					///ビーム
@@ -2087,7 +2101,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				newScreenPrintf(0, 60, main.totalScale);
 				newScreenPrintf(0, 80, main.drawScale);
 				newScreenPrintf(0, 100, item.Have);
-				newScreenPrintf(0, 120, score.enemycount);
+				newScreenPrintf(0, 120,mapchip.number);
 
 				newScreenPrintf(600,0, score.num);
 

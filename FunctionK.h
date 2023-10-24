@@ -5,7 +5,7 @@ const int barriaItem = 1;
 const int speedbeam = 2;
 const int enemynum = 60;
 const int itemnum = 30;
-const int piecesnum = 30;
+const int piecesnum = 40;
 const int mapnumm = 7;
 
 struct Vector2 {
@@ -120,6 +120,7 @@ struct ENEMYCHARACTER {
 	float radius[enemynum];
 	int hitConbo;
 	int conboCollTime;
+	int conboCollTime2;
 	int Handle;
 };
 
@@ -174,6 +175,7 @@ struct BEAM {
 struct DISTANCE {
 
 	float enemyANDplayer[enemynum];
+	float piecesANDplayer[piecesnum];
 	float itemANDplayer[itemnum];
 	int beamANDenemy[enemynum];
 
@@ -183,8 +185,8 @@ struct FLAG {
 	bool isMoveAbove;
 	bool isPlayerEnemyColligion;
 	bool isEnemyDeath[mapnumm][enemynum];
-	bool isPiecesNone[piecesnum];
-	bool isItemNone[itemnum];
+	bool isPiecesNone[mapnumm][piecesnum];
+	bool isItemNone[mapnumm][itemnum];
 	bool isFallStop;
 	bool isFallHighSpeed;
 	bool isFallColl;
@@ -280,6 +282,21 @@ struct NUMBER {
 	int iszero;
 
 	Easing e;
+};
+
+
+struct REN {
+	Vector2 pos[mapnumm][enemynum];
+	int time[mapnumm][enemynum];
+	int count[mapnumm][enemynum];
+
+};
+
+struct RENA {
+	Vector2 pos;
+	int time;
+	int count;
+
 };
 
 enum Scene {

@@ -37,6 +37,7 @@ struct Easing {
 	float easingPlus;
 	float nextCount;
 	float isback;
+	int colltime;
 };
 
 struct SHAKE {
@@ -102,6 +103,7 @@ struct MAINCHARACTER {
 	int hitBackTime;
 	int tutorialtime;
 	int startTime;
+	int ishajimata;
 	int Handle;	
 };
 
@@ -235,13 +237,21 @@ struct SCORE {
 	int num;
 	int enemycount;
 	float saveNum;
+	float saveNum2;
 	float realNum;
+	float realNum2;
 	float linearTime;
-	int feverTime;
+	float linearTime2;
+	float feverTime;
 	float upnum;
 	Vector2 allpos;
 	int number[7];
+	int plusScore[5];
+	int plusnum;
+	int kasuri;
+	bool iskasuri;
 	bool isChange;
+	bool isChange2;
 	bool isDown;
 };
 

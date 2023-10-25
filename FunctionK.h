@@ -300,6 +300,35 @@ struct RENA {
 
 };
 
+struct SE {
+	int brockbreak;
+	int brockbreak2;
+	int brockbreak3;
+	int brockbreak4;
+	int brockbreak5;
+	int st;
+	int makemasitane;
+	int ikeru;
+	int Handle9;
+	int selectt;
+	int Handle11;
+	int Handle12;
+	int Handle13;
+	int bvh1;
+	int bvh2;
+	int bvh3;
+	int bvh4;
+	int bvh5;
+	int vh6;
+	int vh7;
+	int vh8;
+	int vh9;
+	int vh10;
+	int vh11;
+	int vh12;
+	int vh13;
+};
+
 enum Scene {
 
 	TITLE,

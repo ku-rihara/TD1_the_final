@@ -44,6 +44,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Easing fever{};
 	Easing gamestart{};
 	Easing last1{};
+	Easing ite{};
 	Easing u{};
 	SCORE score{};
 	Mask mask {};
@@ -60,6 +61,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	REN enemyrenban{};
 	RENA bb{};
 	Vector2 beamscalee{};
+	Vector2 isc{};
+	Easing ma{};
 
 	SceneChangeP sc{
 		{0,0},
@@ -68,6 +71,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{640,1080},
 		0,
 		false
+	};
+
+
+	SE se{
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
+		{-1},
 	};
 
 
@@ -195,7 +228,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	
 	
-	
 	box.Handle= Novice::LoadTexture("white1x1.png");
 	main.Handle = Novice::LoadTexture("./Resources./Images./player1-3.png");
 	enemy.Handle = Novice::LoadTexture("./Resources./Images./enemy.png");	
@@ -230,6 +262,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	tutorialbord3.Handle = Novice::LoadTexture("./Resources./Images./tutorial3.png");
 	tutorialbord4.Handle = Novice::LoadTexture("./Resources./Images./tutorial4.png");
 
+
+	///音
+	se.brockbreak = Novice::LoadAudio("./Resources./Images./break.mp3");
 	
 
 	// キー入力結果を受け取る箱
@@ -387,7 +422,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					for (int p = 0; p < piecesnum; p++) {
 						flag.isPiecesNone[s][p] = 0;
 						
-
 					}
 				}
 
@@ -534,7 +568,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					Go.easing.easingTime = 0;
 					Go.easing.nextCount = 0;
 					Go.scale = 0;
-
+					fever.nextCount = 0;
+					score.feverTime = 0;
+					flag.isFever = 0;
+					fever.isback = 0;
+					score.enemycount = 0;
+					flag.isfeverTimedown = 0;
 
 
 				//タイム初期化
@@ -542,13 +581,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				clock.minutecount = 0;
 
 				clock.second = 0;
-				clock.second10 = 0;
-				clock.minute = 2;
+				clock.second10 = 3;
+				clock.minute = 1;
 				clock.stoptimer = 0;
 
 				clock.color = WHITE;
 
 				last1.isEasing = 0;
+
+				ma.easingPlus = 0.05f;
 
 				Scene += 1;
 			}
@@ -762,7 +803,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			///kakeraがふわふわ動くイージング
-			pieces.scale = easeOutBack1(pieces.easing, 0.8f, 1.0f);
+			pieces.scale = easeOutSine(pieces.easing, 0.7f, 1.0f);
+			isc.y = easeOutSine(pieces.easing, 1.4f, 1.6f);
 
 
 			///敵の頂点の座標計算
@@ -785,13 +827,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < itemnum; i++) {
 
 				///アイテムの頂点座標
-				item.vertexPos[i].LeftTop = LeftTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftTop, 0, 1.5f*mapchip.zoomScale);
-				item.vertexPos[i].LeftBottom = LeftBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftBottom, 0, 1.5f * mapchip.zoomScale);
-				item.vertexPos[i].RightTop = RightTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightTop, 0, 1.5f * mapchip.zoomScale);
-				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightBottom, 0, 1.5f * mapchip.zoomScale);
+				item.vertexPos[i].LeftTop = LeftTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftTop, 0, isc);
+				item.vertexPos[i].LeftBottom = LeftBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftBottom, 0, isc);
+				item.vertexPos[i].RightTop = RightTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightTop, 0, isc);
+				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightBottom, 0, isc);
 
 				item.radius[i] = 24 * mapchip.zoomScale;
 			}
+
+			isc.x = 1.8f * mapchip.zoomScale;
+
+			ite.easingTime += ite.easingPlus;
+
+			if (ite.easingTime >= 1.0f || ite.easingTime <= 0) {
+				ite.easingPlus = -ite.easingPlus;
+			}
+
+		
+			ma.easingTime += ma.easingPlus;
+			if (ma.easingTime >= 1.0f || ma.easingTime <= 0) {
+				ma.easingPlus = -ma.easingPlus;
+			}
+			main.vertexWide.LeftTop.y = easeOutCirc(ma, 40, 48);
+			main.vertexWide.RightTop.y = easeOutCirc(ma, 40, 48);
 
 			for (int i = 0; i < piecesnum; i++) {
 
@@ -821,7 +879,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			mapchip.size = 48 * mapchip.zoomScale;
 
 				
-				beamscalee.x = main.drawScale ;
+				beamscalee.x = main.drawScale;
 				beamscalee.y =1;
 			
 
@@ -1024,7 +1082,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							score.plusnum = 0;
 							u.isEasing = 0;
 							u.isback = 0;
-
+							score.realNum2 = 0;
+							main.damageCollTime = 0;
+						 fever.isEasing = 0;
+						
 						}				
 					}
 				}
@@ -1231,6 +1292,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				else if(flag.isFallStop == 1 && flag.isStop == 1) {
 					main.acceleration.y = 0;
 				}
+
 				if (flag.isStop == 0) {
 					///加速度足していき
 					main.velocity.y += main.acceleration.y;
@@ -1301,7 +1363,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 						///急降下をやめる時は保存した速度になう速度を代入
-						if (keys[DIK_SPACE] == 0 || flag.isDamage == 1 || item.Have == 2||flag.isStop==1) {
+						if (keys[DIK_SPACE] == 0 || flag.isDamage == 1 || item.Have == 2||flag.isStop==1||flag.isStop==1) {
 			
 							flag.isFallHighSpeed = 0;
 						}
@@ -1713,8 +1775,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 				else if (flag.isFever == 1) {
-					score.realNum += 50 * enemy.hitConbo*2;
-					score.realNum2 += 50 * enemy.hitConbo*2;
+					score.realNum += 50 * enemy.hitConbo*1.5f;
+					score.realNum2 += 50 * enemy.hitConbo*1.5f;
 				}
 				
 				if (flag.isFever == 0) {
@@ -2058,7 +2120,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 					}
 
-					if (flag.isDamage == 1) {
+					
+					else if (flag.isFever == 1) {
 
 						///マップの破壊（どしゃん）
 						if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
@@ -2107,8 +2170,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 							}
 						}
-
 					}
+					
 				}
 
 				else {
@@ -2592,11 +2655,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			
 				//分
-				Novice::DrawSpriteRect(120, int(score.allpos.y), clock.minute * 64, 0, 64, 64, numberHandle, 0.1f, 1, 0,WHITE);
+				Novice::DrawSpriteRect(120, int(score.allpos.y), clock.minute * 64, 0, 64, 64, numberHandle, 0.1f, 1, 0, WHITE);
 
 				//：：ってん
 				Novice::DrawSprite(165, int(score.allpos.y), tenHandle, 1, 1, 0, WHITE);
-
 
 				//秒10
 				Novice::DrawSpriteRect(220, int(score.allpos.y), clock.second10 * 64, 0, 64, 64, numberHandle, 0.1f, 1, 0, WHITE);
@@ -2618,6 +2680,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				}
 
+				
 				if (u.isEasing == 1) {
 					//ageの描画
 					Novice::DrawSprite(int(main.screenPos.x+(main.radius-10)), int(main.screenPos.y-(main.radius/3)), SizeUpHandle, 1, 1, 0, int(0xffffff* u.isback));
@@ -2667,7 +2730,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				Novice::DrawSprite(int(sc.pos2.x + sc.random.x), int(sc.pos2.y), sceneChangeHandle2, 1, 1, 0.0f, 0xFFFFFFFF);
 
 
-				
 				newScreenPrintf(0, 20, main.totalScale);
 
 				break;

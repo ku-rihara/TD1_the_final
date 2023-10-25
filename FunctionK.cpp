@@ -72,6 +72,65 @@ Vector2 RightBottomVertex(Vector2 center, Vector2  RightBottomvertex, float thet
 	return result;
 }
 
+Vector2 LeftTopVertex(Vector2 center, Vector2  LeftTopvertex, float theta, Vector2 scawle) {
+
+	Vector2 result;
+
+	LeftTopvertex.x = -LeftTopvertex.x / 2;
+	LeftTopvertex.y = -LeftTopvertex.y / 2;
+
+
+	result.x = center.x + (LeftTopvertex.x * cosf(theta) - LeftTopvertex.y * sinf(theta)) * scawle.x;
+	result.y = center.y + (LeftTopvertex.x * sinf(theta) + LeftTopvertex.y * cosf(theta)) * scawle.y;
+
+	return result;
+
+}
+
+Vector2 LeftBottomVertex(Vector2 center, Vector2  LeftBottomvertex, float theta, Vector2 scawle) {
+
+	Vector2 result;
+
+	LeftBottomvertex.x = -LeftBottomvertex.x / 2;
+	LeftBottomvertex.y = LeftBottomvertex.y / 2;
+
+
+	result.x = center.x + (LeftBottomvertex.x * cosf(theta) - LeftBottomvertex.y * sinf(theta)) * scawle.x;
+	result.y = center.y + (LeftBottomvertex.x * sinf(theta) + LeftBottomvertex.y * cosf(theta)) * scawle.y;
+
+	return result;
+
+}
+
+Vector2 RightTopVertex(Vector2 center, Vector2  RightTopvertex, float theta, Vector2 scawle) {
+	Vector2 result;
+
+	RightTopvertex.x = RightTopvertex.x / 2;
+	RightTopvertex.y = -RightTopvertex.y / 2;
+
+
+	result.x = center.x + (RightTopvertex.x * cosf(theta) - RightTopvertex.y * sinf(theta)) * scawle.x;
+	result.y = center.y + (RightTopvertex.x * sinf(theta) + RightTopvertex.y * cosf(theta)) * scawle.y;
+
+	return result;
+}
+
+Vector2 RightBottomVertex(Vector2 center, Vector2  RightBottomvertex, float theta, Vector2 scawle) {
+
+	Vector2 result;
+
+	RightBottomvertex.x = RightBottomvertex.x / 2;
+	RightBottomvertex.y = RightBottomvertex.y / 2;
+
+
+	result.x = center.x + (RightBottomvertex.x * cosf(theta) - RightBottomvertex.y * sinf(theta)) * scawle.x;
+	result.y = center.y + (RightBottomvertex.x * sinf(theta) + RightBottomvertex.y * cosf(theta)) * scawle.y;
+
+	return result;
+}
+
+
+
 
 Vector2 LeftTopMapNum(Vector2 worldpos,float scale, float heigth, float width, float size ) {
 

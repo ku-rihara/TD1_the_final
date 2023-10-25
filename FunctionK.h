@@ -3,7 +3,7 @@
 const int tutorial = 0;
 const int barriaItem = 1;
 const int speedbeam = 2;
-const int enemynum = 60;
+const int enemynum = 1000;
 const int itemnum = 30;
 const int piecesnum = 40;
 const int mapnumm = 7;
@@ -36,7 +36,7 @@ struct Easing {
 	float result;
 	float easingPlus;
 	float nextCount;
-	float isback;
+	int isback;
 	int colltime;
 };
 
@@ -145,7 +145,7 @@ struct PIECES {
 	Vector2 worldPos[mapnumm][piecesnum];
 	Vector2 screenPos[mapnumm][piecesnum];
 	Vector2 distance[piecesnum];
-	Vector2 Spone[mapnumm];
+	Vector2 Spone[mapnumm][piecesnum];
 	Easing easing;
 	float radius[piecesnum];
 	int Have;
@@ -289,6 +289,7 @@ struct REN {
 	Vector2 pos[mapnumm][enemynum];
 	int time[mapnumm][enemynum];
 	int count[mapnumm][enemynum];
+	int end[mapnumm][enemynum];
 
 };
 
@@ -315,6 +316,15 @@ Vector2 LeftBottomVertex(Vector2 center, Vector2  LeftBottomvertex, float theta,
 Vector2 RightTopVertex(Vector2 center, Vector2  RightTopvertex, float theta, float scale);
 
 Vector2 RightBottomVertex(Vector2 center, Vector2  RightBottomvertex, float theta, float scale);
+
+Vector2 LeftTopVertex(Vector2 center, Vector2  LeftTopvertex, float theta, Vector2 scawle);
+
+Vector2 LeftBottomVertex(Vector2 center, Vector2  LeftBottomvertex, float theta, Vector2 scawle);
+
+Vector2 RightTopVertex(Vector2 center, Vector2  RightTopvertex, float theta, Vector2 scawle);
+
+Vector2 RightBottomVertex(Vector2 center, Vector2  RightBottomvertex, float theta, Vector2 scawle);
+
 
 Vector2 LeftTopMapNum(Vector2 worldpos, float scale, float heigth, float width, float size);
 

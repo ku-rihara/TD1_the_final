@@ -60,6 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	REN enemyrenban{};
 	RENA bb{};
 	Vector2 beamscalee{};
+	Particle par{};
 
 	SceneChangeP sc{
 		{0,0},
@@ -68,6 +69,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{640,1080},
 		0,
 		false
+	};
+
+	Result result{
+		{-800,300},
+		0.05f
 	};
 
 
@@ -193,7 +199,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int skiphandle;
 	int nowt;
 
-	
+	int numberBig;
+	int numberBiggest;
+	int resultTex;
 	
 	
 	box.Handle= Novice::LoadTexture("white1x1.png");
@@ -222,6 +230,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	enemydeath= Novice::LoadTexture("./Resources./Images./enemyDead.png");
 	skiphandle= Novice::LoadTexture("./Resources./Images./skip.png");
 	nowt= Novice::LoadTexture("./Resources./Images./nowtutorial.png");
+
+	numberBig= Novice::LoadTexture("./Resources./Images./numberBig.png");
+	numberBiggest = Novice::LoadTexture("./Resources./Images./numberBiggest.png");
+	resultTex= Novice::LoadTexture("./Resources./Images./scoreA.png");
 	
 
 	///ちゅーとりある　
@@ -2422,7 +2434,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			beam.screenPos.y = (beam.worldPos.y * mapchip.zoomScale) + mapchip.ScrollPos.y;
 
 
-
+			score.num = 1283245;
 			///スコアかきかき
 			score.number[0] = score.num / 1000000;
 			score.number[1] = score.num % 1000000 / 100000;
@@ -2444,6 +2456,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 
 		case RESULT:
+
+			result.pos.x = (1.0f - result.t) * result.pos.x + result.t * 400;
+			if (result.pos.x >= 399) {
+				result.pos.x = 400;
+				par.isTrigger = true;
+			}
+
+			KamiParticle(par, 1280, 30, -1, 1, -0.5f, 0.6f);
 
 			break;
 		}
@@ -2674,6 +2694,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			case RESULT:
+
+				Novice::DrawSprite(0, 0, resultTex, 1, 1, 0.0f, 0xFFFFFFFF);
+				for (int i = 0; i < 7; i++) {
+
+					Novice::DrawSpriteRect(int(result.pos.x + i * 120), int(result.pos.y), score.number[i] * 128, 0, 128, 128, numberBiggest, 0.1f, 1, 0.0f, 0xc6b42fFF);
+				}
+				for (int i = 0; i < 5; i++) {
+					for (int j = 0; j < 50; j++) {
+						if (par.isActive[i][j] == true) {
+							Novice::DrawBox(int(par.pos[i][j].x), int(par.pos[i][j].y), int(par.width[i][j]), int(par.height[i][j]), par.slope[i][j], par.color[i][j], kFillModeSolid);
+						}
+					}
+				}
 
 				break;
 

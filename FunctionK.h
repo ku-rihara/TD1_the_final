@@ -307,6 +307,11 @@ enum Scene {
 	RESULT,
 };
 
+struct Result {
+	Vector2 pos;
+	float t;
+};
+
 void VectorScreenPrintf(int x, int y, Vector2 vector);
 
 Vector2 LeftTopVertex(Vector2 center, Vector2  LeftTopvertex, float theta, float scale);

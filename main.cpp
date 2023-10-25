@@ -192,13 +192,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int enemydeath;
 	int skiphandle;
 	int nowt;
+
+	
 	
 	
 	box.Handle= Novice::LoadTexture("white1x1.png");
 	main.Handle = Novice::LoadTexture("./Resources./Images./player1-3.png");
 	enemy.Handle = Novice::LoadTexture("./Resources./Images./enemy.png");	
 	mapchip.Handle = Novice::LoadTexture("./Resources./Images./block.png");///マップチップの画像
-	item.Handle = Novice::LoadTexture("./Resources./Images./SkillBox.png");
+	item.Handle = Novice::LoadTexture("./Resources./Images./skills.png");
 	beam.Handle= Novice::LoadTexture("./Resources./Images./LaserBeamFiring.png");
 	pieces.Handle= Novice::LoadTexture("./Resources./Images./point.png");
 	numberHandle= Novice::LoadTexture("./Resources./Images./number.png");
@@ -541,7 +543,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				clock.second = 0;
 				clock.second10 = 0;
-				clock.minute = 4;
+				clock.minute = 2;
 				clock.stoptimer = 0;
 
 				clock.color = WHITE;
@@ -613,11 +615,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					for (int i = 0; i < enemynum; i++) {
 
 						if (s == mapchip.number) {
-							flag.isEnemyDeath[mapchip.number+1][i] = 0;
+							
 							flag.isEnemyDeath[mapchip.number][i] = 0;
 							flag.isEnemyDeath[mapchip.number-1][i] = 1;
 
-							enemyrenban.end[mapchip.number+1][i] = 0;
+							
 							enemyrenban.end[mapchip.number][i] = 0;
 							enemyrenban.end[mapchip.number-1][i] = 1;
 						}
@@ -630,7 +632,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (s == mapchip.number) {
 							flag.isPiecesNone[mapchip.number][p] = 0;
 							flag.isPiecesNone[mapchip.number-1][p] = 1;
-							flag.isPiecesNone[mapchip.number+1][p] = 0;
+							
 						}	
 					}
 				}
@@ -744,8 +746,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Go.vertexPos.RightBottom = RightBottomVertex(tutorialbord.screenPos, read.vertexWide.RightBottom, Go.rotate, Go.scale);
 
 			
-			
-
 			enemy.easing.easingTime += enemy.easing.easingPlus;
 
 			if (enemy.easing.easingTime >= 1) {
@@ -785,10 +785,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < itemnum; i++) {
 
 				///アイテムの頂点座標
-				item.vertexPos[i].LeftTop = LeftTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftTop, 0, mapchip.zoomScale);
-				item.vertexPos[i].LeftBottom = LeftBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftBottom, 0, mapchip.zoomScale);
-				item.vertexPos[i].RightTop = RightTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightTop, 0, mapchip.zoomScale);
-				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightBottom, 0, mapchip.zoomScale);
+				item.vertexPos[i].LeftTop = LeftTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftTop, 0, 1.5f*mapchip.zoomScale);
+				item.vertexPos[i].LeftBottom = LeftBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].LeftBottom, 0, 1.5f * mapchip.zoomScale);
+				item.vertexPos[i].RightTop = RightTopVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightTop, 0, 1.5f * mapchip.zoomScale);
+				item.vertexPos[i].RightBottom = RightBottomVertex(item.screenPos[mapchip.number][i], item.vertexWide[i].RightBottom, 0, 1.5f * mapchip.zoomScale);
 
 				item.radius[i] = 24 * mapchip.zoomScale;
 			}
@@ -820,8 +820,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			main.radius = 24 * mapchip.zoomScale * main.drawScale;
 			mapchip.size = 48 * mapchip.zoomScale;
 
-			
-			
+				
 				beamscalee.x = main.drawScale ;
 				beamscalee.y =1;
 			
@@ -1978,7 +1977,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						main.damage.shakeTime = 30;///シェイクの時間を決める
 					}
 
-					if (flag.isFever == 1) {
+					if (flag.isDamage == 1) {
+
 						///マップの破壊（どしゃん）
 						if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
 
@@ -2030,14 +2030,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-			else if (map[mapchip.number][int(main.mapNumber.RightTop.y)][int(main.oldMapNumber.RightTop.x)] != 1 && map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.oldMapNumber.RightBottom.x)] != 1 &&
+				else if (map[mapchip.number][int(main.mapNumber.RightTop.y)][int(main.oldMapNumber.RightTop.x)] != 1 && map[mapchip.number][int(main.mapNumber.RightBottom.y)][int(main.oldMapNumber.RightBottom.x)] != 1 &&
 					map[mapchip.number][int(main.mapNumber.LeftTop.y)][int(main.oldMapNumber.LeftTop.x)] != 1 && map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.oldMapNumber.LeftBottom.x)] != 1) {
 
 
 					///ｘ軸に当たった時の斜め反応
 					main.worldPos.x = float(main.fitOldMapSize.intx);
 
-					if (flag.isDamageColl == 0&&flag.isFever==0) {
+					if (flag.isDamageColl == 0 && flag.isFever == 0) {
 						///マップの破壊（どしゃん）
 						if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
 
@@ -2058,7 +2058,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 					}
 
-					else if (flag.isFever == 1) {
+					if (flag.isDamage == 1) {
 
 						///マップの破壊（どしゃん）
 						if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
@@ -2107,12 +2107,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 							}
 						}
+
 					}
 				}
 
 				else {
 
-					if (flag.isFever == 0) {
+					if (flag.isFever == 0&&flag.isDamageColl == 0) {
 					///それ以外の反応
 					main.worldPos.x = float(main.fitOldMapSize.intx);
 					main.worldPos.y = float(main.fitMapSize.inty);
@@ -2125,7 +2126,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						main.damage.shakeTime = 30;///シェイクの時間を決める
 					}
 
-					else if (flag.isFever == 1) {
+					if (flag.isDamage == 1) {
 						///マップの破壊（どしゃん）
 						if (map[mapchip.number][int(main.mapNumber.LeftBottom.y)][int(main.mapNumber.LeftBottom.x)] == 1) {
 
@@ -2293,8 +2294,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						///マップの破壊
 						if (map[mapchip.number][y][x] == 1) {
 
-							main.worldPos.y = float(main.fitOldMapSize.inty)-4;
-
+							if (flag.isFever == 0) {
+								main.worldPos.y = float(main.fitOldMapSize.inty) - 4;
+							
+							}
 
 							if (flag.isDamageColl == 0&& flag.isFever == 0) {
 								flag.isDamage = 1;///ダメージを受ける
